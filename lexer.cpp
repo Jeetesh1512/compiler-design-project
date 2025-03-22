@@ -175,7 +175,7 @@ int main(int argc, char const *argv[])
         cout << "| " << left << setw(9) << tokenTypeNames[get<0>(token)] << " | "
              << setw(14) << get<1>(token) << " | "
              << setw(9) << to_string(get<2>(token)) << " | "
-             << setw(9) << get<3>(token) << " |" << setw(14) << get<4>(token) << "  |" << endl;
+             << setw(9) << get<3>(token) << " | " << setw(14) << get<4>(token) << " |" << endl;
     }
     cout << "+-----------+----------------+-----------+-----------+----------------+" << endl;
 
@@ -196,7 +196,7 @@ int main(int argc, char const *argv[])
         outFile << "| " << left << setw(9) << tokenTypeNames[get<0>(token)] << " | "
                 << setw(14) << get<1>(token) << " | "
                 << setw(9) << to_string(get<2>(token)) << " | "
-                << setw(9) << get<3>(token) << " |" << setw(14) << get<4>(token) << "  |" << endl;
+                << setw(9) << get<3>(token) << " | " << setw(14) << get<4>(token) << " |" << endl;
     }
 
     outFile << "+-----------+----------------+-----------+-----------+----------------+" << endl;
