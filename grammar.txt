@@ -1,0 +1,58 @@
+%tokens INT FLOAT MAIN WHILE EQ LT GT INC DECC PLUS MINUS MULT DIV MOD LPAREN RPAREN LBRACE RBRACE SEMI COMMA ID DEC NUM
+
+%%
+
+S: INT MAIN LPAREN RPAREN compound_stmt
+    ;
+
+compound_stmt: LBRACE declaration_list  statement_list RBRACE
+    ;
+
+declaration_list: declaration declaration_list
+    |
+    ;
+
+declaration: type_specifier ID EQ literal SEMI
+    | type_specifier ID SEMI;
+    ;
+
+type_specifier: INT
+    | FLOAT
+    ;
+
+statement_list: statement statement_list
+    |
+    ;
+
+statement: assignment
+    | while_stmt
+    | declaration
+    ;
+
+assignment: ID EQ expression SEMI
+    ;
+
+expression: expression PLUS expression
+    | expression MINUS expression
+    | expression MULT expression
+    | expression DIV expression
+    | expression MOD expression
+    | expression INC
+    | expression DECC
+    | LPAREN expression RPAREN
+    | ID
+    | literal
+    ;
+
+literal: NUM 
+    | DEC
+    ;
+
+while_stmt: WHILE LPAREN condition RPAREN compound_stmt
+    ;
+
+condition: ID LT literal
+    | ID GT literal
+    ;
+
+%%

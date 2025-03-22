@@ -6,6 +6,8 @@ enum class TokenType
 {
     ID,     // variable names
     NUM,    // numbers (integers)
+    MAIN,   //main
+    WHILE,   //WHILE
     DEC,    // decimal numbers (floats)
     INT,    //"int" keyword
     FLOAT,  //"float" keyword
@@ -30,6 +32,8 @@ enum class TokenType
 unordered_map<TokenType, string> tokenTypeNames = {
     {TokenType::ID, "ID"},
     {TokenType::NUM, "NUM"},
+    {TokenType::MAIN, "MAIN"},
+    {TokenType::WHILE, "WHILE"},
     {TokenType::DEC, "DEC"},
     {TokenType::INT, "INT"},
     {TokenType::FLOAT, "FLOAT"},
@@ -58,6 +62,8 @@ void tokenise(const string &code)
     vector<pair<TokenType, regex>> tokenPatterns = {
         {TokenType::INT, regex("int")},
         {TokenType::FLOAT, regex("float")},
+        {TokenType::MAIN, regex("main")},
+        {TokenType::WHILE, regex("while")},
         {TokenType::EQ, regex("=")},
         {TokenType::LT, regex("<")},
         {TokenType::GT, regex(">")},
