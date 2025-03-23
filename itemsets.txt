@@ -1,6 +1,7 @@
 ---------NON-TERMINALS-----------
 S
 compound_stmt
+while_stmt_option
 declaration_list
 declaration
 type_specifier
