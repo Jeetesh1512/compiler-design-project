@@ -5,7 +5,11 @@
 S: INT MAIN LPAREN RPAREN compound_stmt
     ;
 
-compound_stmt: LBRACE declaration_list  statement_list RBRACE
+compound_stmt: LBRACE declaration_list statement_list while_stmt_option RBRACE
+    ;
+
+while_stmt_option: while_stmt
+    |
     ;
 
 declaration_list: declaration declaration_list
@@ -13,7 +17,6 @@ declaration_list: declaration declaration_list
     ;
 
 declaration: type_specifier ID EQ literal SEMI
-    | type_specifier ID SEMI;
     ;
 
 type_specifier: INT
@@ -25,7 +28,6 @@ statement_list: statement statement_list
     ;
 
 statement: assignment
-    | while_stmt
     | declaration
     ;
 
@@ -48,11 +50,11 @@ literal: NUM
     | DEC
     ;
 
-while_stmt: WHILE LPAREN condition RPAREN compound_stmt
+while_stmt: WHILE LPAREN condition RPAREN LBRACE statement_list RBRACE
     ;
 
-condition: ID LT literal
-    | ID GT literal
+condition: expression LT expression
+    | expression GT expression
     ;
 
 %%
