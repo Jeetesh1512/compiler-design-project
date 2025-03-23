@@ -227,7 +227,7 @@ void find_first(map<int, pair<string, vector<string>>> &productions, vector<stri
                                 changed = true;
                         }
                     }
-                    //if FIRST(symbol) does not contain epsilon, stop propagation
+                    // if FIRST(symbol) does not contain epsilon, stop propagation
                     if (first[symbol].find("epsilon") == first[symbol].end())
                     {
                         epsilon_in_all = false;
@@ -243,46 +243,116 @@ void find_first(map<int, pair<string, vector<string>>> &productions, vector<stri
                 }
             }
 
-            //if all symbols in the body can derive epsilon, add epsilon to FIRST(head)
-            if(epsilon_in_all)
+            // if all symbols in the body can derive epsilon, add epsilon to FIRST(head)
+            if (epsilon_in_all)
             {
-                if(first[head].insert("epsilon").second)
+                if (first[head].insert("epsilon").second)
                 {
-                    changed=true;
+                    changed = true;
                 }
             }
         }
     }
 }
 
-set<string> getFirstOfSymbols(const vector<string>&symbols,map<string,set<string>> &first)
+set<string> getFirstOfSymbols(const vector<string> &symbols, map<string, set<string>> &first)
 {
     set<string> result;
     bool canDeriveEpsilon = true;
-    for(const auto &sym:symbols)
+    for (const auto &sym : symbols)
     {
-        if(first.find(sym)==first.end())
+        if (first.find(sym) == first.end())
         {
-            //Terminal
+            // Terminal
             result.insert(sym);
-            canDeriveEpsilon=false;
+            canDeriveEpsilon = false;
             break;
         }
-        
+
         const auto &firstSet = first[sym];
-        result.insert(firstSet.begin(),firstSet.end());
+        result.insert(firstSet.begin(), firstSet.end());
         result.erase("epsilon");
-        if(firstSet.find("epsilon")==firstSet.end())
+        if (firstSet.find("epsilon") == firstSet.end())
         {
-            canDeriveEpsilon=false;
+            canDeriveEpsilon = false;
             break;
         }
     }
-    if(canDeriveEpsilon)
+    if (canDeriveEpsilon)
     {
         result.insert("epsilon");
     }
     return result;
+}
+
+void find_follow(map<int, pair<string, vector<string>>> &productions, vector<string> &nonTerminals, vector<string> &terminals, map<string, set<string>> &first, map<string, set<string>> &follow)
+{
+    for (const string it : nonTerminals)
+        follow[it] = {};
+
+    follow[nonTerminals[0]].insert("$"); // for start symbol
+
+    bool changed = true;
+    while (changed)
+    {
+        changed = false;
+
+        for (const auto &prod : productions)
+        {
+            string head = prod.second.first;
+            vector<string> body = prod.second.second;
+
+            for (size_t i = 0; i<body.size(); i++)
+            {
+                string B = body[i];
+
+                // if B is a non-terminal
+                if (find(nonTerminals.begin(), nonTerminals.end(), B) != nonTerminals.end())
+                {
+                    // if B is followed by another symbol, add FIRST(next)-epsilon to FOLLOW(B)
+                    if (i + 1 < body.size())
+                    {
+                        vector<string> nextSymbols(body.begin() + i + 1, body.end());
+                        set<string> firstOfNext = getFirstOfSymbols(nextSymbols, first);
+
+                        for (const string &f : firstOfNext)
+                        {
+                            if (f != "epsilon" && follow[B].find(f) == follow[B].end())
+                            {
+                                follow[B].insert(f);
+                                changed = true;
+                            }
+                        }
+
+                        // if FIRST(next) contains epsilon, add FOLLOW(head) to FOLLOW(B)
+                        if (firstOfNext.find("epsilon") != firstOfNext.end())
+                        {
+                            for (const string &f : follow[head])
+                            {
+                                if (follow[B].find(f) == follow[B].end())
+                                {
+                                    follow[B].insert(f);
+                                    changed = true;
+                                }
+                            }
+                        }
+                    }
+                    // B is at the end of production
+                    else
+                    {
+                        for (const string &f : follow[head])
+                        {
+                            if (follow[B].find(f) == follow[B].end())
+                            {
+                                follow[B].insert(f);
+                                changed = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 using Item = tuple<int, string, vector<string>, int, string>;
@@ -346,17 +416,30 @@ int main(int argc, char const *argv[])
     }
     outFile << "--------------------------------------------------------------------------------\n\n\n";
 
-    find_first(productions,nonTerminals,terminals,first);
-    outFile << "\n-----------FIRST-------------\n";
-    for(auto &x:first)
+    find_first(productions, nonTerminals, terminals, first);
+    outFile << "\n-----------------------FIRST-------------------------\n";
+    for (auto &x : first)
     {
-        outFile<<x.first<<": {";
-        for(auto &y:x.second)
+        outFile << x.first << ": {";
+        for (auto &y : x.second)
         {
-            outFile<<y<<", ";
+            outFile << y << ", ";
         }
-        outFile<<"}\n";
+        outFile << "}\n";
     }
-    outFile << "-----------------------------\n";
+    outFile << "-----------------------------------------------------\n\n";
+
+    find_follow(productions,nonTerminals,terminals,first,follow);
+    outFile << "\n---------------------------------------FOLLOW-----------------------------------------\n";
+    for (auto &x : follow)
+    {
+        outFile << x.first << " : {";
+        for (auto &y : x.second)
+        {
+            outFile << y << ", ";
+        }
+        outFile << "}\n";
+    }
+    outFile << "---------------------------------------------------------------------------------------\n\n";
     return 0;
 }
