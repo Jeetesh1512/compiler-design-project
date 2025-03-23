@@ -15,8 +15,9 @@ condition
 ---------------------------------
 
 
+---------------------------------
 Start Symbol: S
-
+---------------------------------
 
 -----------TERMINALS-------------
 INT
@@ -43,5 +44,40 @@ ID
 DEC
 NUM
 ---------------------------------
+
+
+-----------------------------------Productions--------------------------------
+
+|0|  S' -> S 
+|1|  S -> INT MAIN LPAREN RPAREN compound_stmt 
+|2|  compound_stmt -> LBRACE statement_list while_stmt_option statement_list RBRACE 
+|3|  while_stmt_option -> while_stmt 
+|4|  while_stmt_option -> epsilon 
+|5|  declaration_list -> declaration declaration_list 
+|6|  declaration_list -> epsilon 
+|7|  declaration -> type_specifier ID EQ literal SEMI 
+|8|  type_specifier -> INT 
+|9|  type_specifier -> FLOAT 
+|10|  statement_list -> statement statement_list 
+|11|  statement_list -> declaration_list 
+|12|  statement -> assignment 
+|13|  statement -> declaration 
+|14|  assignment -> ID EQ expression SEMI 
+|15|  expression -> expression PLUS expression 
+|16|  expression -> expression MINUS expression 
+|17|  expression -> expression MULT expression 
+|18|  expression -> expression DIV expression 
+|19|  expression -> expression MOD expression 
+|20|  expression -> expression INC 
+|21|  expression -> expression DECC 
+|22|  expression -> LPAREN expression RPAREN 
+|23|  expression -> ID 
+|24|  expression -> literal 
+|25|  literal -> NUM 
+|26|  literal -> DEC 
+|27|  while_stmt -> WHILE LPAREN condition RPAREN LBRACE statement_list RBRACE 
+|28|  condition -> expression LT expression 
+|29|  condition -> expression GT expression 
+--------------------------------------------------------------------------------
 
 

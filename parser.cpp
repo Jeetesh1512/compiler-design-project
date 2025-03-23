@@ -109,6 +109,79 @@ vector<string> splitSymbols(const string &body)
     return symbols;
 }
 
+void read_productions(map<int,pair<string,vector<string>>> &mp, ifstream &file)
+{
+    file.seekg(0,ios::beg);
+    vector<string> productions;
+    bool insideGrammar=false;
+    string line;
+
+    while(getline(file,line))
+    {
+        line=trim(line);
+
+        if(line=="%%")
+        {
+            if(insideGrammar)
+                break;
+            insideGrammar=true;
+            continue;
+        }
+        if(insideGrammar && !line.empty() && line!=";")
+        {
+            productions.push_back(line);
+        }
+    }
+    file.close();
+
+    bool hasAugmentedStart=false;
+    for(const string &prod:productions)
+    {
+        if(prod.find("S'")==0)
+        {
+            hasAugmentedStart=true;
+            break;
+        }
+    }
+    if(!hasAugmentedStart)
+    {
+        productions.insert(productions.begin(),"S': S");
+    }
+
+    int count=0;
+    string head;
+
+    for(const string &production:productions)
+    {
+        size_t pos = production.find(":");
+
+        if(pos!=string::npos)
+        {
+            head = trim(production.substr(0,pos));
+            string body=trim(production.substr(pos+1));
+
+            vector<string> bodySymbols = splitSymbols(body);
+
+            mp.insert({count,{head,bodySymbols}});
+            count++;
+        }
+        if(production.find("|")!=string::npos)
+        {
+            pos=production.find("|");
+            string body = trim(production.substr(pos+1));
+            if(body.empty())
+            {
+                body="epsilon";
+            }
+
+            vector<string> bodySymbols = splitSymbols(body);
+
+            mp.insert({count,{head,bodySymbols}});
+            count++;
+        }
+    }
+}
+
 
 
 using Item = tuple<int, string, vector<string>, int, string>;
@@ -135,6 +208,7 @@ int main(int argc, char const *argv[])
     map<string,set<string>> follow;
     map<int,vector<Item>> states;
     readTerminals_and_nonTerminals(nonTerminals,terminals,terminalSet,file);
+    map<int,pair<string,vector<string>>> productions;
 
     ofstream outFile("itemsets.txt");
 
@@ -148,10 +222,28 @@ int main(int argc, char const *argv[])
     for(auto it:nonTerminals)
         outFile<<it<<"\n";
     outFile<<"---------------------------------\n\n\n";
+
+    outFile<<"---------------------------------\n";
     outFile<<"Start Symbol: "<<nonTerminals[0]<<endl;
-    outFile<<"\n\n-----------TERMINALS-------------\n";
+    outFile<<"---------------------------------\n";
+
+    outFile<<"\n-----------TERMINALS-------------\n";
     for(auto it:terminals)
         outFile<<it<<"\n";
     outFile<<"---------------------------------\n\n\n";
+
+
+    outFile<<"-----------------------------------Productions--------------------------------\n\n";
+    read_productions(productions,file);
+    for(auto it:productions)
+    {
+        outFile<<"|"<<it.first<<"|  "<<it.second.first<<" -> ";
+        for(const auto &symbol:it.second.second)
+        {
+            outFile<<symbol<<" ";
+        }
+        outFile<<"\n";
+    }
+    outFile<<"--------------------------------------------------------------------------------\n\n\n";
     return 0;
 }
