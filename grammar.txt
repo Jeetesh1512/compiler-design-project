@@ -5,7 +5,7 @@
 S: INT MAIN LPAREN RPAREN compound_stmt
     ;
 
-compound_stmt: LBRACE declaration_list statement_list while_stmt_option statement_list RBRACE
+compound_stmt: LBRACE statement_list while_stmt_option statement_list RBRACE
     ;
 
 while_stmt_option: while_stmt
