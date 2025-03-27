@@ -11,7 +11,7 @@ void removeDuplicates(map<K, V> &inputMap)
     {
         if (seenValues.find(it->second) != seenValues.end())
         {
-            it = inputMap.erase();
+            it = inputMap.erase(it);
         }
         else
         {
@@ -302,7 +302,7 @@ void find_follow(map<int, pair<string, vector<string>>> &productions, vector<str
             string head = prod.second.first;
             vector<string> body = prod.second.second;
 
-            for (size_t i = 0; i<body.size(); i++)
+            for (size_t i = 0; i < body.size(); i++)
             {
                 string B = body[i];
 
@@ -356,6 +356,337 @@ void find_follow(map<int, pair<string, vector<string>>> &productions, vector<str
 }
 
 using Item = tuple<int, string, vector<string>, int, string>;
+
+// Helper function to compute FIRST of a sequence of symbols
+set<string> getFirstOfSequence(const vector<string> &sequence, const map<string, set<string>> &first)
+{
+    set<string> result;
+    bool canDeriveEpsilon = true;
+
+    for (const string &symbol : sequence)
+    {
+        if (first.find(symbol) == first.end())
+        { // Terminal
+            result.insert(symbol);
+            canDeriveEpsilon = false;
+            break;
+        }
+        const set<string> &firstSet = first.at(symbol);
+        result.insert(firstSet.begin(), firstSet.end());
+        result.erase("epsilon");
+        if (firstSet.find("epsilon") == firstSet.end())
+        {
+            canDeriveEpsilon = false;
+            break;
+        }
+    }
+
+    if (canDeriveEpsilon)
+    {
+        result.insert("epsilon");
+    }
+
+    return result;
+}
+
+vector<Item> closure(vector<Item> items, map<int, pair<string, vector<string>>> &productions,
+                     map<string, set<string>> &first, vector<string> &nonTerminals)
+{
+    bool changed;
+    do
+    {
+        changed = false;
+        vector<Item> newItems = items;
+        for (const auto &item : items)
+        {
+            int prod_no = get<0>(item);
+            string head = get<1>(item);
+            vector<string> body = get<2>(item);
+            int dot_pos = get<3>(item);
+            string lookahead = get<4>(item);
+
+            if (dot_pos >= body.size())
+                continue;
+
+            string next_symbol = body[dot_pos];
+            if (find(nonTerminals.begin(), nonTerminals.end(), next_symbol) != nonTerminals.end())
+            {
+                vector<string> remaining(body.begin() + dot_pos + 1, body.end());
+                set<string> firstSet = getFirstOfSequence(remaining, first);
+                if (firstSet.erase("epsilon"))
+                {
+                    firstSet.insert(lookahead);
+                }
+                if (firstSet.empty())
+                {
+                    firstSet.insert(lookahead);
+                }
+
+                for (const auto &prod : productions)
+                {
+                    if (prod.second.first == next_symbol)
+                    {
+                        for (const string &la : firstSet)
+                        {
+                            Item newItem = make_tuple(prod.first,
+                                                      prod.second.first,
+                                                      prod.second.second,
+                                                      0,
+                                                      la);
+                            if (find(newItems.begin(), newItems.end(), newItem) == newItems.end())
+                            {
+                                newItems.push_back(newItem);
+                                changed = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        items = newItems;
+    } while (changed);
+    return items;
+}
+
+vector<Item> goTo(const vector<Item> &items, const string &symbol,
+                  map<int, pair<string, vector<string>>> &productions,
+                  map<string, set<string>> &first, vector<string> &nonTerminals)
+{
+    vector<Item> nextItems;
+    for (const auto &item : items)
+    {
+        int prod_no = get<0>(item);
+        string head = get<1>(item);
+        vector<string> body = get<2>(item);
+        int dot_pos = get<3>(item);
+        string lookahead = get<4>(item);
+
+        if (dot_pos < body.size() && body[dot_pos] == symbol)
+        {
+            Item newItem = make_tuple(prod_no, head, body, dot_pos + 1, lookahead);
+            nextItems.push_back(newItem);
+        }
+    }
+    return closure(nextItems, productions, first, nonTerminals);
+}
+
+void createItemSet(map<int, pair<string, vector<string>>> &productions, vector<string> &nonTerminals, vector<string> &terminals, map<string, set<string>> &first, map<int, vector<Item>> &states)
+{
+    if (productions.find(0) == productions.end())
+    {
+        cout << "Error: Augmented production (S' -> S) was not found" << endl;
+        return;
+    }
+
+    vector<Item> items;
+    items.emplace_back(0, productions[0].first, productions[0].second, 0, "$");
+
+    items = closure(items, productions, first, nonTerminals);
+
+    states[0] = items;
+    int stateCount = 1;
+    bool changed = true;
+
+    while (changed)
+    {
+        changed = false;
+
+        map<int, vector<Item>> newStates = states;
+
+        for (const auto &[stateId, stateItems] : states)
+        {
+            set<string> symbols;
+            for (const auto &item : stateItems)
+            {
+                const vector<string> &body = get<2>(item);
+                int dot_pos = get<3>(item);
+                if (dot_pos < body.size())
+                {
+                    symbols.insert(body[dot_pos]);
+                }
+            }
+
+            for (const string &sym : symbols)
+            {
+                vector<Item> newState = goTo(stateItems, sym, productions, first, nonTerminals);
+
+                if (!newState.empty())
+                {
+                    bool stateExists = false;
+                    for (const auto &[id, existingState] : newStates)
+                    {
+                        if (existingState == newState)
+                        {
+                            stateExists = true;
+                            break;
+                        }
+                    }
+
+                    if (!stateExists)
+                    {
+                        newStates[stateCount] = newState;
+                        stateCount++;
+                        changed = true;
+                    }
+                }
+            }
+        }
+        states = newStates;
+    }
+}
+
+void constructParsingTable(const map<int, vector<Item>> &states, map<int, pair<string, vector<string>>> &productions, vector<string> &nonTerminals, vector<string> &terminals, set<string> &terminalSet, map<string, set<string>> &first, map<string, set<string>> &follow)
+{
+    map<pair<int, string>, string> parsingTable;
+
+    for (const auto &[stateId, items] : states)
+    {
+        for (const auto &item : items)
+        {
+            int prod_no = get<0>(item);
+            string head = get<1>(item);
+            vector<string> body = get<2>(item);
+            int dot_pos = get<3>(item);
+            string lookahead = get<4>(item);
+
+            if (dot_pos == body.size()) // Reduction or Accept
+            {
+                if (head == productions[0].first && lookahead == "$")
+                {
+                    parsingTable[{stateId, "$"}] = "Accept";
+                }
+                else
+                {
+                    parsingTable[{stateId, lookahead}] = "r" + to_string(prod_no);
+                }
+            }
+            else // Shift or Goto
+            {
+                string nextSymbol = body[dot_pos];
+                vector<Item> gotoItems = goTo(items, nextSymbol, productions, first, nonTerminals);
+
+                if (!gotoItems.empty())
+                {
+                    for (const auto &[nextStateId, nextState] : states)
+                    {
+                        if (nextState == gotoItems)
+                        {
+                            if (find(nonTerminals.begin(), nonTerminals.end(), nextSymbol) != nonTerminals.end())
+                            {
+                                parsingTable[{stateId, nextSymbol}] = to_string(nextStateId);
+                            }
+                            else
+                            {
+                                parsingTable[{stateId, nextSymbol}] = "s" + to_string(nextStateId);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    ofstream outFile("parsingTable.txt");
+    if (!outFile)
+    {
+        cout << "Error Opening the file!!!" << endl;
+        return;
+    }
+
+    // Ensure `$` is in terminals
+    if (find(terminals.begin(), terminals.end(), "$") == terminals.end())
+        terminals.push_back("$");
+
+    int colWidth = 12;  // Adjusted for better alignment
+    int totalColumns = terminals.size() + nonTerminals.size();
+
+    // Header
+    outFile << "\n---------------------------- LR(1) Parsing Table ----------------------------\n";
+    outFile << setw(5) << "State" << " |";
+
+    for (const string &term : terminals)
+        if (term != "epsilon") outFile << setw(colWidth) << term << " |";
+    
+    for (const string &nt : nonTerminals)
+        if (nt != productions[0].first) outFile << setw(colWidth) << nt << " |";
+
+    outFile << "\n" << string((colWidth + 2) * (totalColumns + 1), '-') << "\n";
+
+    // Table Rows
+    for (const auto &[stateId, items] : states)
+    {
+        outFile << setw(5) << stateId << " |";
+
+        for (const string &term : terminals)
+        {
+            if (term == "epsilon") continue;
+            string action = parsingTable[{stateId, term}];
+            outFile << setw(colWidth) << (action.empty() ? " " : action) << " |";
+        }
+        
+        for (const string &nt : nonTerminals)
+        {
+            if (nt != productions[0].first)
+            {
+                string gotoAction = parsingTable[{stateId, nt}];
+                outFile << setw(colWidth) << (gotoAction.empty() ? " " : gotoAction) << " |";
+            }
+        }
+
+        outFile << "\n" << string((colWidth + 2) * (totalColumns + 1), '-') << "\n";
+    }
+
+    outFile.close();
+}
+
+
+void printItem(const Item &item, ofstream &outFile)
+{
+    int prod_no = get<0>(item);
+    string head = get<1>(item);
+    vector<string> body = get<2>(item);
+    int dot_pos = get<3>(item);
+    string lookahead = get<4>(item);
+
+    // Print production number and head
+    outFile << prod_no << ". " << head << " -> ";
+
+    // Print body with dot
+    for (size_t i = 0; i < body.size(); i++)
+    {
+        if (i == dot_pos)
+        {
+            outFile << ".";
+        }
+        outFile << body[i] << " ";
+    }
+
+    // If dot is at the end
+    if (dot_pos == body.size())
+    {
+        outFile << ".";
+    }
+
+    // Print lookahead
+    outFile << ", " << lookahead << endl;
+}
+
+// Function to print all states
+void printStates(const map<int, vector<Item>> &states, ofstream &outFile)
+{
+
+    for (const auto &[stateId, items] : states)
+    {
+        outFile << "State " << stateId << ":" << endl;
+        for (const auto &item : items)
+        {
+            printItem(item, outFile);
+        }
+        outFile << "-----------------------------" << endl;
+    }
+    outFile.close();
+}
 
 int main(int argc, char const *argv[])
 {
@@ -429,7 +760,7 @@ int main(int argc, char const *argv[])
     }
     outFile << "-----------------------------------------------------\n\n";
 
-    find_follow(productions,nonTerminals,terminals,first,follow);
+    find_follow(productions, nonTerminals, terminals, first, follow);
     outFile << "\n---------------------------------------FOLLOW-----------------------------------------\n";
     for (auto &x : follow)
     {
@@ -441,5 +772,16 @@ int main(int argc, char const *argv[])
         outFile << "}\n";
     }
     outFile << "---------------------------------------------------------------------------------------\n\n";
+
+    createItemSet(productions, nonTerminals, terminals, first, states);
+    removeDuplicates(states);
+    outFile << "\n-----------------------ITEM-SETS-------------------------\n";
+    printStates(states, outFile);
+    outFile << "-----------------------------------------------------\n\n";
+
+    constructParsingTable(states,productions,nonTerminals,terminals,terminalSet,first,follow);
+
+    cout<<"First and follow sets written to 'itemsets.txt'"<<endl;
+    cout<<"Parsing Table written to 'parsingtable.txt'"<<endl;
     return 0;
 }

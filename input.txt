@@ -2,11 +2,11 @@ int main()
 {
     int a=6;
     float b=4.78;
-    while(a<8)
+    while(a>0)
     {
         int y=0;
         y=b+a;
         b=b+3;
-        a++;
+        a--;
     }
 }
