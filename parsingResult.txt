@@ -1,0 +1,10 @@
+Shift: c
+Shift: c
+Shift: d
+Reduce: C → d 
+Reduce: C → c C 
+Reduce: C → c C 
+Shift: d
+Reduce: C → d 
+Reduce: S → C C 
+Parsing successful!

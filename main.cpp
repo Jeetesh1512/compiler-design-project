@@ -14,5 +14,5 @@ int main(int argc, char *argv[])
 
     lexer(inputfile);
     
-    parser(grammarfile);
+    parse(grammarfile);
 }

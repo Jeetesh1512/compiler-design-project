@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include "tokens.h"
+#include "shiftReduceParser.cpp"
 using namespace std;
 
 template <typename K, typename V>
@@ -535,10 +536,9 @@ void createItemSet(map<int, pair<string, vector<string>>> &productions, vector<s
     }
 }
 
-void constructParsingTable(const map<int, vector<Item>> &states, map<int, pair<string, vector<string>>> &productions, vector<string> &nonTerminals, vector<string> &terminals, set<string> &terminalSet, map<string, set<string>> &first, map<string, set<string>> &follow)
-{
-    map<pair<int, string>, string> parsingTable;
 
+void constructParsingTable(const map<int, vector<Item>> &states, map<int, pair<string, vector<string>>> &productions, vector<string> &nonTerminals, vector<string> &terminals, set<string> &terminalSet, map<string, set<string>> &first, map<string, set<string>> &follow,map<pair<int, string>, string> &parsingTable)
+{
     for (const auto &[stateId, items] : states)
     {
         for (const auto &item : items)
@@ -688,10 +688,9 @@ void printStates(const map<int, vector<Item>> &states, ofstream &outFile)
     outFile.close();
 }
 
-stack<int> stateStack;
-stack<string> symbolStack;
 
-void parser(const string &filename)
+
+void parse(const string &filename)
 {
     ifstream file(filename);
     if (!file.is_open())
@@ -708,6 +707,7 @@ void parser(const string &filename)
     map<int, vector<Item>> states;
     readTerminals_and_nonTerminals(nonTerminals, terminals, terminalSet, file);
     map<int, pair<string, vector<string>>> productions;
+    map<pair<int, string>, string> parsingTable;
 
     ofstream outFile("itemsets.txt");
 
@@ -776,11 +776,20 @@ void parser(const string &filename)
     printStates(states, outFile);
     outFile << "-----------------------------------------------------\n\n";
 
-    constructParsingTable(states,productions,nonTerminals,terminals,terminalSet,first,follow);
+    constructParsingTable(states,productions,nonTerminals,terminals,terminalSet,first,follow,parsingTable);
 
     cout<<"First and follow sets written to 'itemsets.txt'"<<endl;
     cout<<"Parsing Table written to 'parsingtable.txt'"<<endl;
 
-    for(auto it:parserTokens)
-        cout<<it<<endl;
+    parserTokens.clear();
+    parserTokens.push_back("c");
+    parserTokens.push_back("c");
+    parserTokens.push_back("d");
+    parserTokens.push_back("d");
+    parserTokens.push_back("$");
+    
+    Parser parser(parserTokens,productions,parsingTable,"parsingResult.txt");
+    cout<<"The steps involved during parsing are written in parsingResult.txt"<<endl;
+
+    parser.parse();
 }

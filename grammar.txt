@@ -5,26 +5,21 @@
 S: INT MAIN LPAREN RPAREN compound_stmt
     ;
 
-compound_stmt: LBRACE statement_list while_stmt_option statement_list RBRACE
-    ;
-
-while_stmt_option: while_stmt
-    |
-    ;
-
-declaration_list: declaration declaration_list
-    |
+compound_stmt: LBRACE statement_list while_stmt statement_list RBRACE
+    |   LBRACE statement_list while_stmt  RBRACE
+    |   LBRACE statement_list RBRACE
     ;
 
 declaration: type_specifier ID EQ literal SEMI
+    | type_specifier ID EQ expression SEMI
     ;
 
 type_specifier: INT
     | FLOAT
     ;
 
-statement_list: statement statement_list
-    |   declaration_list
+statement_list: statement
+    |   statement_list statement
     ;
 
 statement: assignment
