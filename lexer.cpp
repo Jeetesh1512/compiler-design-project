@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include <regex>
 #include "symbolTable.cpp"
+#include "tokens.h"
 using namespace std;
 
 enum class TokenType
@@ -185,19 +186,30 @@ void tokenise(const string &code)
     }
 }
 
-int main(int argc, char const *argv[])
+vector<string> parserTokens;
+vector<string> getParserTokens()
 {
-    if (argc < 2)
-    {
-        cout << "To run: " << argv[0] << " <input_file>" << endl;
-        return 1;
+    for(auto &[type,value,line,pos,scope]:tokens){
+        if(tokenTypeNames.find(type)!=tokenTypeNames.end())
+        {
+            parserTokens.push_back(tokenTypeNames.at(type));
+        }
+        else{
+            cerr<<"Unknown token type at line "<<line<<", position "<<pos<<endl;
+            exit(1);
+        }
     }
+    parserTokens.push_back("$");
+    return parserTokens;
+}
 
-    ifstream file(argv[1]);
+void lexer(const string &filename)
+{
+    ifstream file(filename);
     if (!file.is_open())
     {
-        cout << "Cannot open file " << argv[1] << endl;
-        return 1;
+        cout << "Cannot open file " << filename << endl;
+        exit(1);
     }
 
     string code((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
@@ -211,7 +223,7 @@ int main(int argc, char const *argv[])
     if (!outFile)
     {
         cout << "Error opening file for writing!" << endl;
-        return 1;
+        exit(1);
     }
 
     outFile << "+-----------+----------------+-----------+-----------+----------------+" << endl;
@@ -231,5 +243,5 @@ int main(int argc, char const *argv[])
     outFile.close();
     cout << "Tokens written to tokens.txt" << endl;
 
-    return 0;
+    getParserTokens();
 }

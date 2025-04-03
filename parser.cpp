@@ -1,8 +1,8 @@
 #include <bits/stdc++.h>
+#include "tokens.h"
 using namespace std;
 
 template <typename K, typename V>
-
 void removeDuplicates(map<K, V> &inputMap)
 {
     set<V> seenValues;
@@ -688,19 +688,16 @@ void printStates(const map<int, vector<Item>> &states, ofstream &outFile)
     outFile.close();
 }
 
-int main(int argc, char const *argv[])
-{
-    if (argc != 2)
-    {
-        cout << "To run: " << argv[0] << " <grammar file>" << endl;
-        return 1;
-    }
+stack<int> stateStack;
+stack<string> symbolStack;
 
-    ifstream file(argv[1]);
+void parser(const string &filename)
+{
+    ifstream file(filename);
     if (!file.is_open())
     {
-        cout << "Error in opening file" << endl;
-        return 1;
+        cout << "Error in opening file " <<filename <<endl;
+        exit(1);
     }
 
     string line;
@@ -717,7 +714,7 @@ int main(int argc, char const *argv[])
     if (!outFile)
     {
         cout << "Error opening the file!!" << endl;
-        return 1;
+        exit(1);
     }
 
     outFile << "---------NON-TERMINALS-----------\n";
@@ -783,5 +780,7 @@ int main(int argc, char const *argv[])
 
     cout<<"First and follow sets written to 'itemsets.txt'"<<endl;
     cout<<"Parsing Table written to 'parsingtable.txt'"<<endl;
-    return 0;
+
+    for(auto it:parserTokens)
+        cout<<it<<endl;
 }
