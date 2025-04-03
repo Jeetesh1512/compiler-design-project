@@ -781,12 +781,12 @@ void parse(const string &filename)
     cout<<"First and follow sets written to 'itemsets.txt'"<<endl;
     cout<<"Parsing Table written to 'parsingtable.txt'"<<endl;
 
-    parserTokens.clear();
-    parserTokens.push_back("c");
-    parserTokens.push_back("c");
-    parserTokens.push_back("d");
-    parserTokens.push_back("d");
-    parserTokens.push_back("$");
+    // parserTokens.clear();
+    // parserTokens.push_back("c");
+    // parserTokens.push_back("c");
+    // parserTokens.push_back("d");
+    // parserTokens.push_back("d");
+    // parserTokens.push_back("$");
     
     Parser parser(parserTokens,productions,parsingTable,"parsingResult.txt");
     cout<<"The steps involved during parsing are written in parsingResult.txt"<<endl;
