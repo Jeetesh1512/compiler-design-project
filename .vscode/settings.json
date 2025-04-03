@@ -59,6 +59,7 @@
   "files.associations": {
     "*.css": "css",
     "*.l": "lex",
-    "iostream": "cpp"
+    "iostream": "cpp",
+    "ostream": "cpp"
   }
 }

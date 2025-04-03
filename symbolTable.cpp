@@ -10,7 +10,7 @@ struct Symbol
     int line;
     int pos;
     int scope;
-    vector<pair<int,int>> references;
+    vector<tuple<int, int, int>> references;
 };
 
 class SymbolTable
@@ -41,36 +41,72 @@ public:
     {
         if (!scopeStack.empty())
         {
-            table.erase(currScope);
             scopeStack.pop();
-            currScope = scopeStack.top();
+            if (!scopeStack.empty())
+                currScope = scopeStack.top();
+            else
+                currScope = 0;
         }
     }
 
     void insert(string tokenType, string name, string value, int line, int pos)
     {
-        table[currScope][name] = {
-            tokenType,
-            name,
-            value,
-            false,
-            line,
-            pos,
-            currScope};
+        size_t semicolonPos = value.find(';');
+        if (semicolonPos != string::npos)
+            value = value.substr(0, semicolonPos);
+
+        if (table[currScope].find(name) != table[currScope].end())
+        {
+            table[currScope][name].value = value;
+            table[currScope][name].line = line;
+            table[currScope][name].pos = pos;
+        }
+        else
+        {
+            table[currScope][name] = {
+                tokenType,
+                name,
+                value,
+                false,
+                line,
+                pos,
+                currScope};
+        }
     }
 
-    void markUsed(string name,int line,int pos)
+    void markUsed(string name, int line, int pos)
     {
-        for (auto it = scopeStack.top(); it >= 0; it--)
+        stack<int> tempStack = scopeStack;
+        while (!tempStack.empty())
         {
-            if (table[it].find(name) != table[it].end())
+            int scopeLevel = tempStack.top();
+            tempStack.pop();
+            if (table[scopeLevel].find(name) != table[scopeLevel].end())
             {
-                table[it][name].isUsed = true;
-                table[it][name].references.push_back({line, pos});
+                table[scopeLevel][name].isUsed = true;
+                table[scopeLevel][name].references.push_back({line, pos, currScope});
                 return;
             }
         }
     }
+
+    string getType(const string &varName)
+    {
+        stack<int> tempStack = scopeStack; 
+    
+        while (!tempStack.empty())
+        {
+            int scopeLevel = tempStack.top();
+            tempStack.pop();
+    
+            if (table[scopeLevel].find(varName) != table[scopeLevel].end())
+            {
+                return table[scopeLevel][varName].tokenType; 
+            }
+        }
+        return "UNKNOWN"; 
+    }
+    
 
     bool exists(string name)
     {
@@ -93,30 +129,38 @@ public:
     }
 
     void printTable()
-{
-    cout << "+-----------+--------+-------+------+------+\n";
-    cout << "| TokenType | Name   | Value | Line | Scope |\n";
-    cout << "+-----------+--------+-------+------+------+\n";
-    for (auto &scopeEntry : table)
     {
-        for (auto &varEntry : scopeEntry.second)
+        cout << "+-----------+--------+-------+------+-------+\n";
+        cout << "| TokenType | Name   | Value | Line | Scope |\n";
+        cout << "+-----------+--------+-------+------+-------+\n";
+
+        for (auto &scopeEntry : table)
         {
-            auto &sym = varEntry.second;
-            cout << "| " << sym.tokenType << " | " << sym.name << " | " << sym.value 
-                 << " | " << sym.line << " | " << sym.scope << " |\n";
-            
-            if (!sym.references.empty())
+            for (auto &varEntry : scopeEntry.second)
             {
-                cout << "  Used at: ";
-                for (auto &ref : sym.references)
+                auto &sym = varEntry.second;
+
+                cout << "| " << setw(9) << left << sym.tokenType
+                     << " | " << setw(6) << left << sym.name
+                     << " | " << setw(5) << left << sym.value
+                     << " | " << setw(4) << sym.line
+                     << " | " << setw(4) << sym.scope << " |\n";
+                cout << "+-----------+--------+-------+------+-------+\n";
+
+                if (!sym.references.empty())
                 {
-                    cout << "(Line " << ref.first << ", Pos " << ref.second << ") ";
+                    cout << "|  Referenced at:                           |\n";
+                    for (auto &ref : sym.references)
+                    {
+                        int refLine, refPos, refScope;
+                        tie(refLine, refPos, refScope) = ref;
+                        cout << "|    → Line " << setw(3) << refLine
+                             << ", Pos " << setw(3) << refPos
+                             << ", Scope " << refScope << "           |\n";
+                    }
+                    cout << "+-------------------------------------------+\n";
                 }
-                cout << endl;
             }
         }
     }
-    cout << "+-----------+--------+-------+------+------+\n";
-}
-
 };

@@ -1,13 +1,14 @@
 #include <bits/stdc++.h>
 #include <regex>
+#include "symbolTable.cpp"
 using namespace std;
 
 enum class TokenType
 {
     ID,     // variable names
     NUM,    // numbers (integers)
-    MAIN,   //main
-    WHILE,   //WHILE
+    MAIN,   // main
+    WHILE,  // WHILE
     DEC,    // decimal numbers (floats)
     INT,    //"int" keyword
     FLOAT,  //"float" keyword
@@ -56,6 +57,7 @@ unordered_map<TokenType, string> tokenTypeNames = {
 
 //<TokenType,value,line,pos,scope level>
 vector<tuple<TokenType, string, int, int, int>> tokens;
+SymbolTable symTable;
 
 void tokenise(const string &code)
 {
@@ -89,6 +91,7 @@ void tokenise(const string &code)
     int pos = 0;
     int scopeNo = 0;
     string remainingCode = code;
+    string lastType = "";
 
     while (!remainingCode.empty())
     {
@@ -105,13 +108,42 @@ void tokenise(const string &code)
                 if (tokenType == TokenType::LBRACE)
                 {
                     scopeNo++;
+                    symTable.enterScope();
                 }
                 else if (tokenType == TokenType::RBRACE)
                 {
                     scopeNo--;
+                    symTable.exitScope();
+                }
+                else if (tokenType == TokenType::ID)
+                {
+                    if (!lastType.empty() && (lastType == "int" || lastType == "float"))
+                    {
+                        symTable.insert(lastType, tokenValue, "", lineNo, pos);
+                    }
+                    else if (symTable.exists(tokenValue))
+                    {
+                        symTable.markUsed(tokenValue, lineNo, pos);
+                    }
+                    else
+                    {
+                        cout << "Error: Undeclared variable " << tokenValue << " at line " << lineNo << endl;
+                    }
+                }
+
+                if (tokenType == TokenType::EQ)
+                {
+                    if (!tokens.empty() && get<0>(tokens.back()) == TokenType::ID)
+                    {
+                        string varName = get<1>(tokens.back());
+                        string value = match.suffix().str();
+                        string varType = symTable.getType(varName);
+                        symTable.insert(varType, varName, value, lineNo, pos);
+                    }
                 }
 
                 tokens.push_back({tokenType, tokenValue, lineNo, pos, scopeNo});
+                lastType = (tokenType == TokenType::INT || tokenType == TokenType::FLOAT) ? tokenValue : "";
 
                 size_t newLineCount = count(tokenValue.begin(), tokenValue.end(), '\n');
 
@@ -172,18 +204,7 @@ int main(int argc, char const *argv[])
     file.close();
 
     tokenise(code);
-    cout << "+-----------+----------------+-----------+-----------+----------------+" << endl;
-    cout << "| Token     | Value          | Line      | Pos       | Scope          |" << endl;
-    cout << "+-----------+----------------+-----------+-----------+----------------+" << endl;
-
-    for (const auto &token : tokens)
-    {
-        cout << "| " << left << setw(9) << tokenTypeNames[get<0>(token)] << " | "
-             << setw(14) << get<1>(token) << " | "
-             << setw(9) << to_string(get<2>(token)) << " | "
-             << setw(9) << get<3>(token) << " | " << setw(14) << get<4>(token) << " |" << endl;
-    }
-    cout << "+-----------+----------------+-----------+-----------+----------------+" << endl;
+    symTable.printTable();
 
     ofstream outFile("tokens.txt");
 
