@@ -536,8 +536,7 @@ void createItemSet(map<int, pair<string, vector<string>>> &productions, vector<s
     }
 }
 
-
-void constructParsingTable(const map<int, vector<Item>> &states, map<int, pair<string, vector<string>>> &productions, vector<string> &nonTerminals, vector<string> &terminals, set<string> &terminalSet, map<string, set<string>> &first, map<string, set<string>> &follow,map<pair<int, string>, string> &parsingTable)
+void constructParsingTable(const map<int, vector<Item>> &states, map<int, pair<string, vector<string>>> &productions, vector<string> &nonTerminals, vector<string> &terminals, set<string> &terminalSet, map<string, set<string>> &first, map<string, set<string>> &follow, map<pair<int, string>, string> &parsingTable)
 {
     for (const auto &[stateId, items] : states)
     {
@@ -598,7 +597,7 @@ void constructParsingTable(const map<int, vector<Item>> &states, map<int, pair<s
     if (find(terminals.begin(), terminals.end(), "$") == terminals.end())
         terminals.push_back("$");
 
-    int colWidth = 12;  // Adjusted for better alignment
+    int colWidth = 12; // Adjusted for better alignment
     int totalColumns = terminals.size() + nonTerminals.size();
 
     // Header
@@ -606,12 +605,15 @@ void constructParsingTable(const map<int, vector<Item>> &states, map<int, pair<s
     outFile << setw(5) << "State" << " |";
 
     for (const string &term : terminals)
-        if (term != "epsilon") outFile << setw(colWidth) << term << " |";
-    
-    for (const string &nt : nonTerminals)
-        if (nt != productions[0].first) outFile << setw(colWidth) << nt << " |";
+        if (term != "epsilon")
+            outFile << setw(colWidth) << term << " |";
 
-    outFile << "\n" << string((colWidth + 2) * (totalColumns + 1), '-') << "\n";
+    for (const string &nt : nonTerminals)
+        if (nt != productions[0].first)
+            outFile << setw(colWidth) << nt << " |";
+
+    outFile << "\n"
+            << string((colWidth + 2) * (totalColumns + 1), '-') << "\n";
 
     // Table Rows
     for (const auto &[stateId, items] : states)
@@ -620,11 +622,12 @@ void constructParsingTable(const map<int, vector<Item>> &states, map<int, pair<s
 
         for (const string &term : terminals)
         {
-            if (term == "epsilon") continue;
+            if (term == "epsilon")
+                continue;
             string action = parsingTable[{stateId, term}];
             outFile << setw(colWidth) << (action.empty() ? " " : action) << " |";
         }
-        
+
         for (const string &nt : nonTerminals)
         {
             if (nt != productions[0].first)
@@ -634,12 +637,12 @@ void constructParsingTable(const map<int, vector<Item>> &states, map<int, pair<s
             }
         }
 
-        outFile << "\n" << string((colWidth + 2) * (totalColumns + 1), '-') << "\n";
+        outFile << "\n"
+                << string((colWidth + 2) * (totalColumns + 1), '-') << "\n";
     }
 
     outFile.close();
 }
-
 
 void printItem(const Item &item, ofstream &outFile)
 {
@@ -688,14 +691,12 @@ void printStates(const map<int, vector<Item>> &states, ofstream &outFile)
     outFile.close();
 }
 
-
-
 void parse(const string &filename)
 {
     ifstream file(filename);
     if (!file.is_open())
     {
-        cout << "Error in opening file " <<filename <<endl;
+        cout << "Error in opening file " << filename << endl;
         exit(1);
     }
 
@@ -776,20 +777,22 @@ void parse(const string &filename)
     printStates(states, outFile);
     outFile << "-----------------------------------------------------\n\n";
 
-    constructParsingTable(states,productions,nonTerminals,terminals,terminalSet,first,follow,parsingTable);
+    constructParsingTable(states, productions, nonTerminals, terminals, terminalSet, first, follow, parsingTable);
 
-    cout<<"First and follow sets written to 'itemsets.txt'"<<endl;
-    cout<<"Parsing Table written to 'parsingtable.txt'"<<endl;
+    cout << "First and follow sets written to 'itemsets.txt'" << endl;
+    cout << "Parsing Table written to 'parsingtable.txt'" << endl;
 
-    // parserTokens.clear();
-    // parserTokens.push_back("c");
-    // parserTokens.push_back("c");
-    // parserTokens.push_back("d");
-    // parserTokens.push_back("d");
-    // parserTokens.push_back("$");
-    
-    Parser parser(parserTokens,productions,parsingTable,"parsingResult.txt");
-    cout<<"The steps involved during parsing are written in parsingResult.txt"<<endl;
+    // cout << "Parsing Table for State 29: " << endl;
+    // for (auto &entry : parsingTable)
+    // {
+    //     if (entry.first.first == 29)
+    //     {
+    //         cout << "Token: " << entry.first.second << " -> Action: " << entry.second << endl;
+    //     }
+    // }
+
+    Parser parser(parserTokens, productions, parsingTable, "parsingResult.txt");
+    cout << "The steps involved during parsing are written in parsingResult.txt" << endl;
 
     parser.parse();
 }

@@ -1,6 +1,16 @@
 ---------NON-TERMINALS-----------
 S
-C
+compound_stmt
+declaration
+type_specifier
+statement_list
+statement
+inc_dec_statement
+assignment
+expression
+literal
+while_stmt
+condition
 ---------------------------------
 
 
@@ -9,81 +19,3585 @@ Start Symbol: S
 ---------------------------------
 
 -----------TERMINALS-------------
-c
-d
+INT
+FLOAT
+MAIN
+WHILE
+EQ
+LT
+GT
+INC
+DECC
+PLUS
+MINUS
+MULT
+DIV
+MOD
+LPAREN
+RPAREN
+LBRACE
+RBRACE
+SEMI
+COMMA
+ID
+DEC
+NUM
 ---------------------------------
 
 
 -----------------------------------Productions-----------------------------------------
 
 |0|  S' -> S 
-|1|  S -> C C 
-|2|  C -> c C 
-|3|  C -> d 
+|1|  S -> INT MAIN LPAREN RPAREN compound_stmt 
+|2|  compound_stmt -> LBRACE statement_list while_stmt statement_list RBRACE 
+|3|  compound_stmt -> LBRACE statement_list while_stmt RBRACE 
+|4|  compound_stmt -> LBRACE statement_list RBRACE 
+|5|  declaration -> type_specifier ID EQ literal SEMI 
+|6|  declaration -> type_specifier ID EQ expression SEMI 
+|7|  type_specifier -> INT 
+|8|  type_specifier -> FLOAT 
+|9|  statement_list -> statement 
+|10|  statement_list -> statement_list statement 
+|11|  statement -> assignment 
+|12|  statement -> declaration 
+|13|  statement -> inc_dec_statement 
+|14|  inc_dec_statement -> ID INC SEMI 
+|15|  inc_dec_statement -> ID DECC SEMI 
+|16|  assignment -> ID EQ expression SEMI 
+|17|  expression -> expression PLUS expression 
+|18|  expression -> expression MINUS expression 
+|19|  expression -> expression MULT expression 
+|20|  expression -> expression DIV expression 
+|21|  expression -> expression MOD expression 
+|22|  expression -> LPAREN expression RPAREN 
+|23|  expression -> ID 
+|24|  expression -> literal 
+|25|  literal -> NUM 
+|26|  literal -> DEC 
+|27|  while_stmt -> WHILE LPAREN condition RPAREN LBRACE statement_list RBRACE 
+|28|  condition -> expression LT expression 
+|29|  condition -> expression GT expression 
 --------------------------------------------------------------------------------
 
 
 
 -----------------------FIRST-------------------------
-C: {c, d, }
-S: {c, d, }
-S': {c, d, }
-c: {c, }
-d: {d, }
+COMMA: {COMMA, }
+DEC: {DEC, }
+DECC: {DECC, }
+DIV: {DIV, }
+EQ: {EQ, }
+FLOAT: {FLOAT, }
+GT: {GT, }
+ID: {ID, }
+INC: {INC, }
+INT: {INT, }
+LBRACE: {LBRACE, }
+LPAREN: {LPAREN, }
+LT: {LT, }
+MAIN: {MAIN, }
+MINUS: {MINUS, }
+MOD: {MOD, }
+MULT: {MULT, }
+NUM: {NUM, }
+PLUS: {PLUS, }
+RBRACE: {RBRACE, }
+RPAREN: {RPAREN, }
+S: {INT, }
+S': {INT, }
+SEMI: {SEMI, }
+WHILE: {WHILE, }
+assignment: {ID, }
+compound_stmt: {LBRACE, }
+condition: {DEC, ID, LPAREN, NUM, }
+declaration: {FLOAT, INT, }
+expression: {DEC, ID, LPAREN, NUM, }
+inc_dec_statement: {ID, }
+literal: {DEC, NUM, }
+statement: {FLOAT, ID, INT, }
+statement_list: {FLOAT, ID, INT, }
+type_specifier: {FLOAT, INT, }
+while_stmt: {WHILE, }
 -----------------------------------------------------
 
 
 ---------------------------------------FOLLOW-----------------------------------------
-C : {$, c, d, }
 S : {$, }
 S' : {}
+assignment : {FLOAT, ID, INT, RBRACE, WHILE, }
+compound_stmt : {$, }
+condition : {RPAREN, }
+declaration : {FLOAT, ID, INT, RBRACE, WHILE, }
+expression : {DIV, GT, LT, MINUS, MOD, MULT, PLUS, RPAREN, SEMI, }
+inc_dec_statement : {FLOAT, ID, INT, RBRACE, WHILE, }
+literal : {DIV, GT, LT, MINUS, MOD, MULT, PLUS, RPAREN, SEMI, }
+statement : {FLOAT, ID, INT, RBRACE, WHILE, }
+statement_list : {FLOAT, ID, INT, RBRACE, WHILE, }
+type_specifier : {ID, }
+while_stmt : {FLOAT, ID, INT, RBRACE, }
 ---------------------------------------------------------------------------------------
 
 
 -----------------------ITEM-SETS-------------------------
 State 0:
 0. S' -> .S , $
-1. S -> .C C , $
-2. C -> .c C , c
-2. C -> .c C , d
-3. C -> .d , c
-3. C -> .d , d
+1. S -> .INT MAIN LPAREN RPAREN compound_stmt , $
 -----------------------------
 State 1:
-1. S -> C .C , $
-2. C -> .c C , $
-3. C -> .d , $
+1. S -> INT .MAIN LPAREN RPAREN compound_stmt , $
 -----------------------------
 State 2:
 0. S' -> S ., $
 -----------------------------
 State 3:
-2. C -> c .C , c
-2. C -> c .C , d
-2. C -> .c C , c
-3. C -> .d , c
-2. C -> .c C , d
-3. C -> .d , d
+1. S -> INT MAIN .LPAREN RPAREN compound_stmt , $
 -----------------------------
 State 4:
-3. C -> d ., c
-3. C -> d ., d
+1. S -> INT MAIN LPAREN .RPAREN compound_stmt , $
 -----------------------------
 State 5:
-1. S -> C C ., $
+1. S -> INT MAIN LPAREN RPAREN .compound_stmt , $
+2. compound_stmt -> .LBRACE statement_list while_stmt statement_list RBRACE , $
+3. compound_stmt -> .LBRACE statement_list while_stmt RBRACE , $
+4. compound_stmt -> .LBRACE statement_list RBRACE , $
 -----------------------------
 State 6:
-2. C -> c .C , $
-2. C -> .c C , $
-3. C -> .d , $
+2. compound_stmt -> LBRACE .statement_list while_stmt statement_list RBRACE , $
+3. compound_stmt -> LBRACE .statement_list while_stmt RBRACE , $
+4. compound_stmt -> LBRACE .statement_list RBRACE , $
+9. statement_list -> .statement , WHILE
+10. statement_list -> .statement_list statement , WHILE
+9. statement_list -> .statement , RBRACE
+10. statement_list -> .statement_list statement , RBRACE
+11. statement -> .assignment , WHILE
+12. statement -> .declaration , WHILE
+13. statement -> .inc_dec_statement , WHILE
+9. statement_list -> .statement , FLOAT
+9. statement_list -> .statement , ID
+9. statement_list -> .statement , INT
+10. statement_list -> .statement_list statement , FLOAT
+10. statement_list -> .statement_list statement , ID
+10. statement_list -> .statement_list statement , INT
+11. statement -> .assignment , RBRACE
+12. statement -> .declaration , RBRACE
+13. statement -> .inc_dec_statement , RBRACE
+16. assignment -> .ID EQ expression SEMI , WHILE
+5. declaration -> .type_specifier ID EQ literal SEMI , WHILE
+6. declaration -> .type_specifier ID EQ expression SEMI , WHILE
+14. inc_dec_statement -> .ID INC SEMI , WHILE
+15. inc_dec_statement -> .ID DECC SEMI , WHILE
+11. statement -> .assignment , FLOAT
+12. statement -> .declaration , FLOAT
+13. statement -> .inc_dec_statement , FLOAT
+11. statement -> .assignment , ID
+12. statement -> .declaration , ID
+13. statement -> .inc_dec_statement , ID
+11. statement -> .assignment , INT
+12. statement -> .declaration , INT
+13. statement -> .inc_dec_statement , INT
+16. assignment -> .ID EQ expression SEMI , RBRACE
+5. declaration -> .type_specifier ID EQ literal SEMI , RBRACE
+6. declaration -> .type_specifier ID EQ expression SEMI , RBRACE
+14. inc_dec_statement -> .ID INC SEMI , RBRACE
+15. inc_dec_statement -> .ID DECC SEMI , RBRACE
+7. type_specifier -> .INT , ID
+8. type_specifier -> .FLOAT , ID
+16. assignment -> .ID EQ expression SEMI , FLOAT
+5. declaration -> .type_specifier ID EQ literal SEMI , FLOAT
+6. declaration -> .type_specifier ID EQ expression SEMI , FLOAT
+14. inc_dec_statement -> .ID INC SEMI , FLOAT
+15. inc_dec_statement -> .ID DECC SEMI , FLOAT
+16. assignment -> .ID EQ expression SEMI , ID
+5. declaration -> .type_specifier ID EQ literal SEMI , ID
+6. declaration -> .type_specifier ID EQ expression SEMI , ID
+14. inc_dec_statement -> .ID INC SEMI , ID
+15. inc_dec_statement -> .ID DECC SEMI , ID
+16. assignment -> .ID EQ expression SEMI , INT
+5. declaration -> .type_specifier ID EQ literal SEMI , INT
+6. declaration -> .type_specifier ID EQ expression SEMI , INT
+14. inc_dec_statement -> .ID INC SEMI , INT
+15. inc_dec_statement -> .ID DECC SEMI , INT
 -----------------------------
 State 7:
-3. C -> d ., $
+1. S -> INT MAIN LPAREN RPAREN compound_stmt ., $
 -----------------------------
 State 8:
-2. C -> c C ., c
-2. C -> c C ., d
+8. type_specifier -> FLOAT ., ID
 -----------------------------
 State 9:
-2. C -> c C ., $
+16. assignment -> ID .EQ expression SEMI , WHILE
+14. inc_dec_statement -> ID .INC SEMI , WHILE
+15. inc_dec_statement -> ID .DECC SEMI , WHILE
+16. assignment -> ID .EQ expression SEMI , RBRACE
+14. inc_dec_statement -> ID .INC SEMI , RBRACE
+15. inc_dec_statement -> ID .DECC SEMI , RBRACE
+16. assignment -> ID .EQ expression SEMI , FLOAT
+14. inc_dec_statement -> ID .INC SEMI , FLOAT
+15. inc_dec_statement -> ID .DECC SEMI , FLOAT
+16. assignment -> ID .EQ expression SEMI , ID
+14. inc_dec_statement -> ID .INC SEMI , ID
+15. inc_dec_statement -> ID .DECC SEMI , ID
+16. assignment -> ID .EQ expression SEMI , INT
+14. inc_dec_statement -> ID .INC SEMI , INT
+15. inc_dec_statement -> ID .DECC SEMI , INT
+-----------------------------
+State 10:
+7. type_specifier -> INT ., ID
+-----------------------------
+State 11:
+11. statement -> assignment ., WHILE
+11. statement -> assignment ., RBRACE
+11. statement -> assignment ., FLOAT
+11. statement -> assignment ., ID
+11. statement -> assignment ., INT
+-----------------------------
+State 12:
+12. statement -> declaration ., WHILE
+12. statement -> declaration ., RBRACE
+12. statement -> declaration ., FLOAT
+12. statement -> declaration ., ID
+12. statement -> declaration ., INT
+-----------------------------
+State 13:
+13. statement -> inc_dec_statement ., WHILE
+13. statement -> inc_dec_statement ., RBRACE
+13. statement -> inc_dec_statement ., FLOAT
+13. statement -> inc_dec_statement ., ID
+13. statement -> inc_dec_statement ., INT
+-----------------------------
+State 14:
+9. statement_list -> statement ., WHILE
+9. statement_list -> statement ., RBRACE
+9. statement_list -> statement ., FLOAT
+9. statement_list -> statement ., ID
+9. statement_list -> statement ., INT
+-----------------------------
+State 15:
+2. compound_stmt -> LBRACE statement_list .while_stmt statement_list RBRACE , $
+3. compound_stmt -> LBRACE statement_list .while_stmt RBRACE , $
+4. compound_stmt -> LBRACE statement_list .RBRACE , $
+10. statement_list -> statement_list .statement , WHILE
+10. statement_list -> statement_list .statement , RBRACE
+10. statement_list -> statement_list .statement , FLOAT
+10. statement_list -> statement_list .statement , ID
+10. statement_list -> statement_list .statement , INT
+27. while_stmt -> .WHILE LPAREN condition RPAREN LBRACE statement_list RBRACE , FLOAT
+27. while_stmt -> .WHILE LPAREN condition RPAREN LBRACE statement_list RBRACE , ID
+27. while_stmt -> .WHILE LPAREN condition RPAREN LBRACE statement_list RBRACE , INT
+27. while_stmt -> .WHILE LPAREN condition RPAREN LBRACE statement_list RBRACE , RBRACE
+11. statement -> .assignment , WHILE
+12. statement -> .declaration , WHILE
+13. statement -> .inc_dec_statement , WHILE
+11. statement -> .assignment , RBRACE
+12. statement -> .declaration , RBRACE
+13. statement -> .inc_dec_statement , RBRACE
+11. statement -> .assignment , FLOAT
+12. statement -> .declaration , FLOAT
+13. statement -> .inc_dec_statement , FLOAT
+11. statement -> .assignment , ID
+12. statement -> .declaration , ID
+13. statement -> .inc_dec_statement , ID
+11. statement -> .assignment , INT
+12. statement -> .declaration , INT
+13. statement -> .inc_dec_statement , INT
+16. assignment -> .ID EQ expression SEMI , WHILE
+5. declaration -> .type_specifier ID EQ literal SEMI , WHILE
+6. declaration -> .type_specifier ID EQ expression SEMI , WHILE
+14. inc_dec_statement -> .ID INC SEMI , WHILE
+15. inc_dec_statement -> .ID DECC SEMI , WHILE
+16. assignment -> .ID EQ expression SEMI , RBRACE
+5. declaration -> .type_specifier ID EQ literal SEMI , RBRACE
+6. declaration -> .type_specifier ID EQ expression SEMI , RBRACE
+14. inc_dec_statement -> .ID INC SEMI , RBRACE
+15. inc_dec_statement -> .ID DECC SEMI , RBRACE
+16. assignment -> .ID EQ expression SEMI , FLOAT
+5. declaration -> .type_specifier ID EQ literal SEMI , FLOAT
+6. declaration -> .type_specifier ID EQ expression SEMI , FLOAT
+14. inc_dec_statement -> .ID INC SEMI , FLOAT
+15. inc_dec_statement -> .ID DECC SEMI , FLOAT
+16. assignment -> .ID EQ expression SEMI , ID
+5. declaration -> .type_specifier ID EQ literal SEMI , ID
+6. declaration -> .type_specifier ID EQ expression SEMI , ID
+14. inc_dec_statement -> .ID INC SEMI , ID
+15. inc_dec_statement -> .ID DECC SEMI , ID
+16. assignment -> .ID EQ expression SEMI , INT
+5. declaration -> .type_specifier ID EQ literal SEMI , INT
+6. declaration -> .type_specifier ID EQ expression SEMI , INT
+14. inc_dec_statement -> .ID INC SEMI , INT
+15. inc_dec_statement -> .ID DECC SEMI , INT
+7. type_specifier -> .INT , ID
+8. type_specifier -> .FLOAT , ID
+-----------------------------
+State 16:
+5. declaration -> type_specifier .ID EQ literal SEMI , WHILE
+6. declaration -> type_specifier .ID EQ expression SEMI , WHILE
+5. declaration -> type_specifier .ID EQ literal SEMI , RBRACE
+6. declaration -> type_specifier .ID EQ expression SEMI , RBRACE
+5. declaration -> type_specifier .ID EQ literal SEMI , FLOAT
+6. declaration -> type_specifier .ID EQ expression SEMI , FLOAT
+5. declaration -> type_specifier .ID EQ literal SEMI , ID
+6. declaration -> type_specifier .ID EQ expression SEMI , ID
+5. declaration -> type_specifier .ID EQ literal SEMI , INT
+6. declaration -> type_specifier .ID EQ expression SEMI , INT
+-----------------------------
+State 17:
+15. inc_dec_statement -> ID DECC .SEMI , WHILE
+15. inc_dec_statement -> ID DECC .SEMI , RBRACE
+15. inc_dec_statement -> ID DECC .SEMI , FLOAT
+15. inc_dec_statement -> ID DECC .SEMI , ID
+15. inc_dec_statement -> ID DECC .SEMI , INT
+-----------------------------
+State 18:
+16. assignment -> ID EQ .expression SEMI , WHILE
+16. assignment -> ID EQ .expression SEMI , RBRACE
+16. assignment -> ID EQ .expression SEMI , FLOAT
+16. assignment -> ID EQ .expression SEMI , ID
+16. assignment -> ID EQ .expression SEMI , INT
+17. expression -> .expression PLUS expression , SEMI
+18. expression -> .expression MINUS expression , SEMI
+19. expression -> .expression MULT expression , SEMI
+20. expression -> .expression DIV expression , SEMI
+21. expression -> .expression MOD expression , SEMI
+22. expression -> .LPAREN expression RPAREN , SEMI
+23. expression -> .ID , SEMI
+24. expression -> .literal , SEMI
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , SEMI
+26. literal -> .DEC , SEMI
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 19:
+14. inc_dec_statement -> ID INC .SEMI , WHILE
+14. inc_dec_statement -> ID INC .SEMI , RBRACE
+14. inc_dec_statement -> ID INC .SEMI , FLOAT
+14. inc_dec_statement -> ID INC .SEMI , ID
+14. inc_dec_statement -> ID INC .SEMI , INT
+-----------------------------
+State 20:
+4. compound_stmt -> LBRACE statement_list RBRACE ., $
+-----------------------------
+State 21:
+27. while_stmt -> WHILE .LPAREN condition RPAREN LBRACE statement_list RBRACE , FLOAT
+27. while_stmt -> WHILE .LPAREN condition RPAREN LBRACE statement_list RBRACE , ID
+27. while_stmt -> WHILE .LPAREN condition RPAREN LBRACE statement_list RBRACE , INT
+27. while_stmt -> WHILE .LPAREN condition RPAREN LBRACE statement_list RBRACE , RBRACE
+-----------------------------
+State 22:
+10. statement_list -> statement_list statement ., WHILE
+10. statement_list -> statement_list statement ., RBRACE
+10. statement_list -> statement_list statement ., FLOAT
+10. statement_list -> statement_list statement ., ID
+10. statement_list -> statement_list statement ., INT
+-----------------------------
+State 23:
+2. compound_stmt -> LBRACE statement_list while_stmt .statement_list RBRACE , $
+3. compound_stmt -> LBRACE statement_list while_stmt .RBRACE , $
+9. statement_list -> .statement , RBRACE
+10. statement_list -> .statement_list statement , RBRACE
+11. statement -> .assignment , RBRACE
+12. statement -> .declaration , RBRACE
+13. statement -> .inc_dec_statement , RBRACE
+9. statement_list -> .statement , FLOAT
+9. statement_list -> .statement , ID
+9. statement_list -> .statement , INT
+10. statement_list -> .statement_list statement , FLOAT
+10. statement_list -> .statement_list statement , ID
+10. statement_list -> .statement_list statement , INT
+16. assignment -> .ID EQ expression SEMI , RBRACE
+5. declaration -> .type_specifier ID EQ literal SEMI , RBRACE
+6. declaration -> .type_specifier ID EQ expression SEMI , RBRACE
+14. inc_dec_statement -> .ID INC SEMI , RBRACE
+15. inc_dec_statement -> .ID DECC SEMI , RBRACE
+11. statement -> .assignment , FLOAT
+12. statement -> .declaration , FLOAT
+13. statement -> .inc_dec_statement , FLOAT
+11. statement -> .assignment , ID
+12. statement -> .declaration , ID
+13. statement -> .inc_dec_statement , ID
+11. statement -> .assignment , INT
+12. statement -> .declaration , INT
+13. statement -> .inc_dec_statement , INT
+7. type_specifier -> .INT , ID
+8. type_specifier -> .FLOAT , ID
+16. assignment -> .ID EQ expression SEMI , FLOAT
+5. declaration -> .type_specifier ID EQ literal SEMI , FLOAT
+6. declaration -> .type_specifier ID EQ expression SEMI , FLOAT
+14. inc_dec_statement -> .ID INC SEMI , FLOAT
+15. inc_dec_statement -> .ID DECC SEMI , FLOAT
+16. assignment -> .ID EQ expression SEMI , ID
+5. declaration -> .type_specifier ID EQ literal SEMI , ID
+6. declaration -> .type_specifier ID EQ expression SEMI , ID
+14. inc_dec_statement -> .ID INC SEMI , ID
+15. inc_dec_statement -> .ID DECC SEMI , ID
+16. assignment -> .ID EQ expression SEMI , INT
+5. declaration -> .type_specifier ID EQ literal SEMI , INT
+6. declaration -> .type_specifier ID EQ expression SEMI , INT
+14. inc_dec_statement -> .ID INC SEMI , INT
+15. inc_dec_statement -> .ID DECC SEMI , INT
+-----------------------------
+State 24:
+5. declaration -> type_specifier ID .EQ literal SEMI , WHILE
+6. declaration -> type_specifier ID .EQ expression SEMI , WHILE
+5. declaration -> type_specifier ID .EQ literal SEMI , RBRACE
+6. declaration -> type_specifier ID .EQ expression SEMI , RBRACE
+5. declaration -> type_specifier ID .EQ literal SEMI , FLOAT
+6. declaration -> type_specifier ID .EQ expression SEMI , FLOAT
+5. declaration -> type_specifier ID .EQ literal SEMI , ID
+6. declaration -> type_specifier ID .EQ expression SEMI , ID
+5. declaration -> type_specifier ID .EQ literal SEMI , INT
+6. declaration -> type_specifier ID .EQ expression SEMI , INT
+-----------------------------
+State 25:
+15. inc_dec_statement -> ID DECC SEMI ., WHILE
+15. inc_dec_statement -> ID DECC SEMI ., RBRACE
+15. inc_dec_statement -> ID DECC SEMI ., FLOAT
+15. inc_dec_statement -> ID DECC SEMI ., ID
+15. inc_dec_statement -> ID DECC SEMI ., INT
+-----------------------------
+State 26:
+26. literal -> DEC ., SEMI
+26. literal -> DEC ., PLUS
+26. literal -> DEC ., MINUS
+26. literal -> DEC ., MULT
+26. literal -> DEC ., DIV
+26. literal -> DEC ., MOD
+-----------------------------
+State 27:
+23. expression -> ID ., SEMI
+23. expression -> ID ., PLUS
+23. expression -> ID ., MINUS
+23. expression -> ID ., MULT
+23. expression -> ID ., DIV
+23. expression -> ID ., MOD
+-----------------------------
+State 28:
+22. expression -> LPAREN .expression RPAREN , SEMI
+22. expression -> LPAREN .expression RPAREN , PLUS
+22. expression -> LPAREN .expression RPAREN , MINUS
+22. expression -> LPAREN .expression RPAREN , MULT
+22. expression -> LPAREN .expression RPAREN , DIV
+22. expression -> LPAREN .expression RPAREN , MOD
+17. expression -> .expression PLUS expression , RPAREN
+18. expression -> .expression MINUS expression , RPAREN
+19. expression -> .expression MULT expression , RPAREN
+20. expression -> .expression DIV expression , RPAREN
+21. expression -> .expression MOD expression , RPAREN
+22. expression -> .LPAREN expression RPAREN , RPAREN
+23. expression -> .ID , RPAREN
+24. expression -> .literal , RPAREN
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , RPAREN
+26. literal -> .DEC , RPAREN
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 29:
+25. literal -> NUM ., SEMI
+25. literal -> NUM ., PLUS
+25. literal -> NUM ., MINUS
+25. literal -> NUM ., MULT
+25. literal -> NUM ., DIV
+25. literal -> NUM ., MOD
+-----------------------------
+State 30:
+16. assignment -> ID EQ expression .SEMI , WHILE
+16. assignment -> ID EQ expression .SEMI , RBRACE
+16. assignment -> ID EQ expression .SEMI , FLOAT
+16. assignment -> ID EQ expression .SEMI , ID
+16. assignment -> ID EQ expression .SEMI , INT
+17. expression -> expression .PLUS expression , SEMI
+18. expression -> expression .MINUS expression , SEMI
+19. expression -> expression .MULT expression , SEMI
+20. expression -> expression .DIV expression , SEMI
+21. expression -> expression .MOD expression , SEMI
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 31:
+24. expression -> literal ., SEMI
+24. expression -> literal ., PLUS
+24. expression -> literal ., MINUS
+24. expression -> literal ., MULT
+24. expression -> literal ., DIV
+24. expression -> literal ., MOD
+-----------------------------
+State 32:
+14. inc_dec_statement -> ID INC SEMI ., WHILE
+14. inc_dec_statement -> ID INC SEMI ., RBRACE
+14. inc_dec_statement -> ID INC SEMI ., FLOAT
+14. inc_dec_statement -> ID INC SEMI ., ID
+14. inc_dec_statement -> ID INC SEMI ., INT
+-----------------------------
+State 33:
+27. while_stmt -> WHILE LPAREN .condition RPAREN LBRACE statement_list RBRACE , FLOAT
+27. while_stmt -> WHILE LPAREN .condition RPAREN LBRACE statement_list RBRACE , ID
+27. while_stmt -> WHILE LPAREN .condition RPAREN LBRACE statement_list RBRACE , INT
+27. while_stmt -> WHILE LPAREN .condition RPAREN LBRACE statement_list RBRACE , RBRACE
+28. condition -> .expression LT expression , RPAREN
+29. condition -> .expression GT expression , RPAREN
+17. expression -> .expression PLUS expression , LT
+18. expression -> .expression MINUS expression , LT
+19. expression -> .expression MULT expression , LT
+20. expression -> .expression DIV expression , LT
+21. expression -> .expression MOD expression , LT
+22. expression -> .LPAREN expression RPAREN , LT
+23. expression -> .ID , LT
+24. expression -> .literal , LT
+17. expression -> .expression PLUS expression , GT
+18. expression -> .expression MINUS expression , GT
+19. expression -> .expression MULT expression , GT
+20. expression -> .expression DIV expression , GT
+21. expression -> .expression MOD expression , GT
+22. expression -> .LPAREN expression RPAREN , GT
+23. expression -> .ID , GT
+24. expression -> .literal , GT
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , LT
+26. literal -> .DEC , LT
+25. literal -> .NUM , GT
+26. literal -> .DEC , GT
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 34:
+16. assignment -> ID .EQ expression SEMI , RBRACE
+14. inc_dec_statement -> ID .INC SEMI , RBRACE
+15. inc_dec_statement -> ID .DECC SEMI , RBRACE
+16. assignment -> ID .EQ expression SEMI , FLOAT
+14. inc_dec_statement -> ID .INC SEMI , FLOAT
+15. inc_dec_statement -> ID .DECC SEMI , FLOAT
+16. assignment -> ID .EQ expression SEMI , ID
+14. inc_dec_statement -> ID .INC SEMI , ID
+15. inc_dec_statement -> ID .DECC SEMI , ID
+16. assignment -> ID .EQ expression SEMI , INT
+14. inc_dec_statement -> ID .INC SEMI , INT
+15. inc_dec_statement -> ID .DECC SEMI , INT
+-----------------------------
+State 35:
+3. compound_stmt -> LBRACE statement_list while_stmt RBRACE ., $
+-----------------------------
+State 36:
+11. statement -> assignment ., RBRACE
+11. statement -> assignment ., FLOAT
+11. statement -> assignment ., ID
+11. statement -> assignment ., INT
+-----------------------------
+State 37:
+12. statement -> declaration ., RBRACE
+12. statement -> declaration ., FLOAT
+12. statement -> declaration ., ID
+12. statement -> declaration ., INT
+-----------------------------
+State 38:
+13. statement -> inc_dec_statement ., RBRACE
+13. statement -> inc_dec_statement ., FLOAT
+13. statement -> inc_dec_statement ., ID
+13. statement -> inc_dec_statement ., INT
+-----------------------------
+State 39:
+9. statement_list -> statement ., RBRACE
+9. statement_list -> statement ., FLOAT
+9. statement_list -> statement ., ID
+9. statement_list -> statement ., INT
+-----------------------------
+State 40:
+2. compound_stmt -> LBRACE statement_list while_stmt statement_list .RBRACE , $
+10. statement_list -> statement_list .statement , RBRACE
+10. statement_list -> statement_list .statement , FLOAT
+10. statement_list -> statement_list .statement , ID
+10. statement_list -> statement_list .statement , INT
+11. statement -> .assignment , RBRACE
+12. statement -> .declaration , RBRACE
+13. statement -> .inc_dec_statement , RBRACE
+11. statement -> .assignment , FLOAT
+12. statement -> .declaration , FLOAT
+13. statement -> .inc_dec_statement , FLOAT
+11. statement -> .assignment , ID
+12. statement -> .declaration , ID
+13. statement -> .inc_dec_statement , ID
+11. statement -> .assignment , INT
+12. statement -> .declaration , INT
+13. statement -> .inc_dec_statement , INT
+16. assignment -> .ID EQ expression SEMI , RBRACE
+5. declaration -> .type_specifier ID EQ literal SEMI , RBRACE
+6. declaration -> .type_specifier ID EQ expression SEMI , RBRACE
+14. inc_dec_statement -> .ID INC SEMI , RBRACE
+15. inc_dec_statement -> .ID DECC SEMI , RBRACE
+16. assignment -> .ID EQ expression SEMI , FLOAT
+5. declaration -> .type_specifier ID EQ literal SEMI , FLOAT
+6. declaration -> .type_specifier ID EQ expression SEMI , FLOAT
+14. inc_dec_statement -> .ID INC SEMI , FLOAT
+15. inc_dec_statement -> .ID DECC SEMI , FLOAT
+16. assignment -> .ID EQ expression SEMI , ID
+5. declaration -> .type_specifier ID EQ literal SEMI , ID
+6. declaration -> .type_specifier ID EQ expression SEMI , ID
+14. inc_dec_statement -> .ID INC SEMI , ID
+15. inc_dec_statement -> .ID DECC SEMI , ID
+16. assignment -> .ID EQ expression SEMI , INT
+5. declaration -> .type_specifier ID EQ literal SEMI , INT
+6. declaration -> .type_specifier ID EQ expression SEMI , INT
+14. inc_dec_statement -> .ID INC SEMI , INT
+15. inc_dec_statement -> .ID DECC SEMI , INT
+7. type_specifier -> .INT , ID
+8. type_specifier -> .FLOAT , ID
+-----------------------------
+State 41:
+5. declaration -> type_specifier .ID EQ literal SEMI , RBRACE
+6. declaration -> type_specifier .ID EQ expression SEMI , RBRACE
+5. declaration -> type_specifier .ID EQ literal SEMI , FLOAT
+6. declaration -> type_specifier .ID EQ expression SEMI , FLOAT
+5. declaration -> type_specifier .ID EQ literal SEMI , ID
+6. declaration -> type_specifier .ID EQ expression SEMI , ID
+5. declaration -> type_specifier .ID EQ literal SEMI , INT
+6. declaration -> type_specifier .ID EQ expression SEMI , INT
+-----------------------------
+State 42:
+5. declaration -> type_specifier ID EQ .literal SEMI , WHILE
+6. declaration -> type_specifier ID EQ .expression SEMI , WHILE
+5. declaration -> type_specifier ID EQ .literal SEMI , RBRACE
+6. declaration -> type_specifier ID EQ .expression SEMI , RBRACE
+5. declaration -> type_specifier ID EQ .literal SEMI , FLOAT
+6. declaration -> type_specifier ID EQ .expression SEMI , FLOAT
+5. declaration -> type_specifier ID EQ .literal SEMI , ID
+6. declaration -> type_specifier ID EQ .expression SEMI , ID
+5. declaration -> type_specifier ID EQ .literal SEMI , INT
+6. declaration -> type_specifier ID EQ .expression SEMI , INT
+25. literal -> .NUM , SEMI
+26. literal -> .DEC , SEMI
+17. expression -> .expression PLUS expression , SEMI
+18. expression -> .expression MINUS expression , SEMI
+19. expression -> .expression MULT expression , SEMI
+20. expression -> .expression DIV expression , SEMI
+21. expression -> .expression MOD expression , SEMI
+22. expression -> .LPAREN expression RPAREN , SEMI
+23. expression -> .ID , SEMI
+24. expression -> .literal , SEMI
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 43:
+26. literal -> DEC ., RPAREN
+26. literal -> DEC ., PLUS
+26. literal -> DEC ., MINUS
+26. literal -> DEC ., MULT
+26. literal -> DEC ., DIV
+26. literal -> DEC ., MOD
+-----------------------------
+State 44:
+23. expression -> ID ., RPAREN
+23. expression -> ID ., PLUS
+23. expression -> ID ., MINUS
+23. expression -> ID ., MULT
+23. expression -> ID ., DIV
+23. expression -> ID ., MOD
+-----------------------------
+State 45:
+22. expression -> LPAREN .expression RPAREN , RPAREN
+22. expression -> LPAREN .expression RPAREN , PLUS
+22. expression -> LPAREN .expression RPAREN , MINUS
+22. expression -> LPAREN .expression RPAREN , MULT
+22. expression -> LPAREN .expression RPAREN , DIV
+22. expression -> LPAREN .expression RPAREN , MOD
+17. expression -> .expression PLUS expression , RPAREN
+18. expression -> .expression MINUS expression , RPAREN
+19. expression -> .expression MULT expression , RPAREN
+20. expression -> .expression DIV expression , RPAREN
+21. expression -> .expression MOD expression , RPAREN
+22. expression -> .LPAREN expression RPAREN , RPAREN
+23. expression -> .ID , RPAREN
+24. expression -> .literal , RPAREN
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , RPAREN
+26. literal -> .DEC , RPAREN
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 46:
+25. literal -> NUM ., RPAREN
+25. literal -> NUM ., PLUS
+25. literal -> NUM ., MINUS
+25. literal -> NUM ., MULT
+25. literal -> NUM ., DIV
+25. literal -> NUM ., MOD
+-----------------------------
+State 47:
+22. expression -> LPAREN expression .RPAREN , SEMI
+22. expression -> LPAREN expression .RPAREN , PLUS
+22. expression -> LPAREN expression .RPAREN , MINUS
+22. expression -> LPAREN expression .RPAREN , MULT
+22. expression -> LPAREN expression .RPAREN , DIV
+22. expression -> LPAREN expression .RPAREN , MOD
+17. expression -> expression .PLUS expression , RPAREN
+18. expression -> expression .MINUS expression , RPAREN
+19. expression -> expression .MULT expression , RPAREN
+20. expression -> expression .DIV expression , RPAREN
+21. expression -> expression .MOD expression , RPAREN
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 48:
+24. expression -> literal ., RPAREN
+24. expression -> literal ., PLUS
+24. expression -> literal ., MINUS
+24. expression -> literal ., MULT
+24. expression -> literal ., DIV
+24. expression -> literal ., MOD
+-----------------------------
+State 49:
+20. expression -> expression DIV .expression , SEMI
+20. expression -> expression DIV .expression , PLUS
+20. expression -> expression DIV .expression , MINUS
+20. expression -> expression DIV .expression , MULT
+20. expression -> expression DIV .expression , DIV
+20. expression -> expression DIV .expression , MOD
+17. expression -> .expression PLUS expression , SEMI
+18. expression -> .expression MINUS expression , SEMI
+19. expression -> .expression MULT expression , SEMI
+20. expression -> .expression DIV expression , SEMI
+21. expression -> .expression MOD expression , SEMI
+22. expression -> .LPAREN expression RPAREN , SEMI
+23. expression -> .ID , SEMI
+24. expression -> .literal , SEMI
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , SEMI
+26. literal -> .DEC , SEMI
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 50:
+18. expression -> expression MINUS .expression , SEMI
+18. expression -> expression MINUS .expression , PLUS
+18. expression -> expression MINUS .expression , MINUS
+18. expression -> expression MINUS .expression , MULT
+18. expression -> expression MINUS .expression , DIV
+18. expression -> expression MINUS .expression , MOD
+17. expression -> .expression PLUS expression , SEMI
+18. expression -> .expression MINUS expression , SEMI
+19. expression -> .expression MULT expression , SEMI
+20. expression -> .expression DIV expression , SEMI
+21. expression -> .expression MOD expression , SEMI
+22. expression -> .LPAREN expression RPAREN , SEMI
+23. expression -> .ID , SEMI
+24. expression -> .literal , SEMI
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , SEMI
+26. literal -> .DEC , SEMI
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 51:
+21. expression -> expression MOD .expression , SEMI
+21. expression -> expression MOD .expression , PLUS
+21. expression -> expression MOD .expression , MINUS
+21. expression -> expression MOD .expression , MULT
+21. expression -> expression MOD .expression , DIV
+21. expression -> expression MOD .expression , MOD
+17. expression -> .expression PLUS expression , SEMI
+18. expression -> .expression MINUS expression , SEMI
+19. expression -> .expression MULT expression , SEMI
+20. expression -> .expression DIV expression , SEMI
+21. expression -> .expression MOD expression , SEMI
+22. expression -> .LPAREN expression RPAREN , SEMI
+23. expression -> .ID , SEMI
+24. expression -> .literal , SEMI
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , SEMI
+26. literal -> .DEC , SEMI
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 52:
+19. expression -> expression MULT .expression , SEMI
+19. expression -> expression MULT .expression , PLUS
+19. expression -> expression MULT .expression , MINUS
+19. expression -> expression MULT .expression , MULT
+19. expression -> expression MULT .expression , DIV
+19. expression -> expression MULT .expression , MOD
+17. expression -> .expression PLUS expression , SEMI
+18. expression -> .expression MINUS expression , SEMI
+19. expression -> .expression MULT expression , SEMI
+20. expression -> .expression DIV expression , SEMI
+21. expression -> .expression MOD expression , SEMI
+22. expression -> .LPAREN expression RPAREN , SEMI
+23. expression -> .ID , SEMI
+24. expression -> .literal , SEMI
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , SEMI
+26. literal -> .DEC , SEMI
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 53:
+17. expression -> expression PLUS .expression , SEMI
+17. expression -> expression PLUS .expression , PLUS
+17. expression -> expression PLUS .expression , MINUS
+17. expression -> expression PLUS .expression , MULT
+17. expression -> expression PLUS .expression , DIV
+17. expression -> expression PLUS .expression , MOD
+17. expression -> .expression PLUS expression , SEMI
+18. expression -> .expression MINUS expression , SEMI
+19. expression -> .expression MULT expression , SEMI
+20. expression -> .expression DIV expression , SEMI
+21. expression -> .expression MOD expression , SEMI
+22. expression -> .LPAREN expression RPAREN , SEMI
+23. expression -> .ID , SEMI
+24. expression -> .literal , SEMI
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , SEMI
+26. literal -> .DEC , SEMI
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 54:
+16. assignment -> ID EQ expression SEMI ., WHILE
+16. assignment -> ID EQ expression SEMI ., RBRACE
+16. assignment -> ID EQ expression SEMI ., FLOAT
+16. assignment -> ID EQ expression SEMI ., ID
+16. assignment -> ID EQ expression SEMI ., INT
+-----------------------------
+State 55:
+26. literal -> DEC ., LT
+26. literal -> DEC ., GT
+26. literal -> DEC ., PLUS
+26. literal -> DEC ., MINUS
+26. literal -> DEC ., MULT
+26. literal -> DEC ., DIV
+26. literal -> DEC ., MOD
+-----------------------------
+State 56:
+23. expression -> ID ., LT
+23. expression -> ID ., GT
+23. expression -> ID ., PLUS
+23. expression -> ID ., MINUS
+23. expression -> ID ., MULT
+23. expression -> ID ., DIV
+23. expression -> ID ., MOD
+-----------------------------
+State 57:
+22. expression -> LPAREN .expression RPAREN , LT
+22. expression -> LPAREN .expression RPAREN , GT
+22. expression -> LPAREN .expression RPAREN , PLUS
+22. expression -> LPAREN .expression RPAREN , MINUS
+22. expression -> LPAREN .expression RPAREN , MULT
+22. expression -> LPAREN .expression RPAREN , DIV
+22. expression -> LPAREN .expression RPAREN , MOD
+17. expression -> .expression PLUS expression , RPAREN
+18. expression -> .expression MINUS expression , RPAREN
+19. expression -> .expression MULT expression , RPAREN
+20. expression -> .expression DIV expression , RPAREN
+21. expression -> .expression MOD expression , RPAREN
+22. expression -> .LPAREN expression RPAREN , RPAREN
+23. expression -> .ID , RPAREN
+24. expression -> .literal , RPAREN
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , RPAREN
+26. literal -> .DEC , RPAREN
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 58:
+25. literal -> NUM ., LT
+25. literal -> NUM ., GT
+25. literal -> NUM ., PLUS
+25. literal -> NUM ., MINUS
+25. literal -> NUM ., MULT
+25. literal -> NUM ., DIV
+25. literal -> NUM ., MOD
+-----------------------------
+State 59:
+27. while_stmt -> WHILE LPAREN condition .RPAREN LBRACE statement_list RBRACE , FLOAT
+27. while_stmt -> WHILE LPAREN condition .RPAREN LBRACE statement_list RBRACE , ID
+27. while_stmt -> WHILE LPAREN condition .RPAREN LBRACE statement_list RBRACE , INT
+27. while_stmt -> WHILE LPAREN condition .RPAREN LBRACE statement_list RBRACE , RBRACE
+-----------------------------
+State 60:
+28. condition -> expression .LT expression , RPAREN
+29. condition -> expression .GT expression , RPAREN
+17. expression -> expression .PLUS expression , LT
+18. expression -> expression .MINUS expression , LT
+19. expression -> expression .MULT expression , LT
+20. expression -> expression .DIV expression , LT
+21. expression -> expression .MOD expression , LT
+17. expression -> expression .PLUS expression , GT
+18. expression -> expression .MINUS expression , GT
+19. expression -> expression .MULT expression , GT
+20. expression -> expression .DIV expression , GT
+21. expression -> expression .MOD expression , GT
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 61:
+24. expression -> literal ., LT
+24. expression -> literal ., GT
+24. expression -> literal ., PLUS
+24. expression -> literal ., MINUS
+24. expression -> literal ., MULT
+24. expression -> literal ., DIV
+24. expression -> literal ., MOD
+-----------------------------
+State 62:
+15. inc_dec_statement -> ID DECC .SEMI , RBRACE
+15. inc_dec_statement -> ID DECC .SEMI , FLOAT
+15. inc_dec_statement -> ID DECC .SEMI , ID
+15. inc_dec_statement -> ID DECC .SEMI , INT
+-----------------------------
+State 63:
+16. assignment -> ID EQ .expression SEMI , RBRACE
+16. assignment -> ID EQ .expression SEMI , FLOAT
+16. assignment -> ID EQ .expression SEMI , ID
+16. assignment -> ID EQ .expression SEMI , INT
+17. expression -> .expression PLUS expression , SEMI
+18. expression -> .expression MINUS expression , SEMI
+19. expression -> .expression MULT expression , SEMI
+20. expression -> .expression DIV expression , SEMI
+21. expression -> .expression MOD expression , SEMI
+22. expression -> .LPAREN expression RPAREN , SEMI
+23. expression -> .ID , SEMI
+24. expression -> .literal , SEMI
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , SEMI
+26. literal -> .DEC , SEMI
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 64:
+14. inc_dec_statement -> ID INC .SEMI , RBRACE
+14. inc_dec_statement -> ID INC .SEMI , FLOAT
+14. inc_dec_statement -> ID INC .SEMI , ID
+14. inc_dec_statement -> ID INC .SEMI , INT
+-----------------------------
+State 65:
+2. compound_stmt -> LBRACE statement_list while_stmt statement_list RBRACE ., $
+-----------------------------
+State 66:
+10. statement_list -> statement_list statement ., RBRACE
+10. statement_list -> statement_list statement ., FLOAT
+10. statement_list -> statement_list statement ., ID
+10. statement_list -> statement_list statement ., INT
+-----------------------------
+State 67:
+5. declaration -> type_specifier ID .EQ literal SEMI , RBRACE
+6. declaration -> type_specifier ID .EQ expression SEMI , RBRACE
+5. declaration -> type_specifier ID .EQ literal SEMI , FLOAT
+6. declaration -> type_specifier ID .EQ expression SEMI , FLOAT
+5. declaration -> type_specifier ID .EQ literal SEMI , ID
+6. declaration -> type_specifier ID .EQ expression SEMI , ID
+5. declaration -> type_specifier ID .EQ literal SEMI , INT
+6. declaration -> type_specifier ID .EQ expression SEMI , INT
+-----------------------------
+State 68:
+6. declaration -> type_specifier ID EQ expression .SEMI , WHILE
+6. declaration -> type_specifier ID EQ expression .SEMI , RBRACE
+6. declaration -> type_specifier ID EQ expression .SEMI , FLOAT
+6. declaration -> type_specifier ID EQ expression .SEMI , ID
+6. declaration -> type_specifier ID EQ expression .SEMI , INT
+17. expression -> expression .PLUS expression , SEMI
+18. expression -> expression .MINUS expression , SEMI
+19. expression -> expression .MULT expression , SEMI
+20. expression -> expression .DIV expression , SEMI
+21. expression -> expression .MOD expression , SEMI
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 69:
+5. declaration -> type_specifier ID EQ literal .SEMI , WHILE
+5. declaration -> type_specifier ID EQ literal .SEMI , RBRACE
+5. declaration -> type_specifier ID EQ literal .SEMI , FLOAT
+5. declaration -> type_specifier ID EQ literal .SEMI , ID
+5. declaration -> type_specifier ID EQ literal .SEMI , INT
+24. expression -> literal ., SEMI
+24. expression -> literal ., PLUS
+24. expression -> literal ., MINUS
+24. expression -> literal ., MULT
+24. expression -> literal ., DIV
+24. expression -> literal ., MOD
+-----------------------------
+State 70:
+22. expression -> LPAREN expression .RPAREN , RPAREN
+22. expression -> LPAREN expression .RPAREN , PLUS
+22. expression -> LPAREN expression .RPAREN , MINUS
+22. expression -> LPAREN expression .RPAREN , MULT
+22. expression -> LPAREN expression .RPAREN , DIV
+22. expression -> LPAREN expression .RPAREN , MOD
+17. expression -> expression .PLUS expression , RPAREN
+18. expression -> expression .MINUS expression , RPAREN
+19. expression -> expression .MULT expression , RPAREN
+20. expression -> expression .DIV expression , RPAREN
+21. expression -> expression .MOD expression , RPAREN
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 71:
+20. expression -> expression DIV .expression , RPAREN
+20. expression -> expression DIV .expression , PLUS
+20. expression -> expression DIV .expression , MINUS
+20. expression -> expression DIV .expression , MULT
+20. expression -> expression DIV .expression , DIV
+20. expression -> expression DIV .expression , MOD
+17. expression -> .expression PLUS expression , RPAREN
+18. expression -> .expression MINUS expression , RPAREN
+19. expression -> .expression MULT expression , RPAREN
+20. expression -> .expression DIV expression , RPAREN
+21. expression -> .expression MOD expression , RPAREN
+22. expression -> .LPAREN expression RPAREN , RPAREN
+23. expression -> .ID , RPAREN
+24. expression -> .literal , RPAREN
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , RPAREN
+26. literal -> .DEC , RPAREN
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 72:
+18. expression -> expression MINUS .expression , RPAREN
+18. expression -> expression MINUS .expression , PLUS
+18. expression -> expression MINUS .expression , MINUS
+18. expression -> expression MINUS .expression , MULT
+18. expression -> expression MINUS .expression , DIV
+18. expression -> expression MINUS .expression , MOD
+17. expression -> .expression PLUS expression , RPAREN
+18. expression -> .expression MINUS expression , RPAREN
+19. expression -> .expression MULT expression , RPAREN
+20. expression -> .expression DIV expression , RPAREN
+21. expression -> .expression MOD expression , RPAREN
+22. expression -> .LPAREN expression RPAREN , RPAREN
+23. expression -> .ID , RPAREN
+24. expression -> .literal , RPAREN
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , RPAREN
+26. literal -> .DEC , RPAREN
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 73:
+21. expression -> expression MOD .expression , RPAREN
+21. expression -> expression MOD .expression , PLUS
+21. expression -> expression MOD .expression , MINUS
+21. expression -> expression MOD .expression , MULT
+21. expression -> expression MOD .expression , DIV
+21. expression -> expression MOD .expression , MOD
+17. expression -> .expression PLUS expression , RPAREN
+18. expression -> .expression MINUS expression , RPAREN
+19. expression -> .expression MULT expression , RPAREN
+20. expression -> .expression DIV expression , RPAREN
+21. expression -> .expression MOD expression , RPAREN
+22. expression -> .LPAREN expression RPAREN , RPAREN
+23. expression -> .ID , RPAREN
+24. expression -> .literal , RPAREN
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , RPAREN
+26. literal -> .DEC , RPAREN
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 74:
+19. expression -> expression MULT .expression , RPAREN
+19. expression -> expression MULT .expression , PLUS
+19. expression -> expression MULT .expression , MINUS
+19. expression -> expression MULT .expression , MULT
+19. expression -> expression MULT .expression , DIV
+19. expression -> expression MULT .expression , MOD
+17. expression -> .expression PLUS expression , RPAREN
+18. expression -> .expression MINUS expression , RPAREN
+19. expression -> .expression MULT expression , RPAREN
+20. expression -> .expression DIV expression , RPAREN
+21. expression -> .expression MOD expression , RPAREN
+22. expression -> .LPAREN expression RPAREN , RPAREN
+23. expression -> .ID , RPAREN
+24. expression -> .literal , RPAREN
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , RPAREN
+26. literal -> .DEC , RPAREN
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 75:
+17. expression -> expression PLUS .expression , RPAREN
+17. expression -> expression PLUS .expression , PLUS
+17. expression -> expression PLUS .expression , MINUS
+17. expression -> expression PLUS .expression , MULT
+17. expression -> expression PLUS .expression , DIV
+17. expression -> expression PLUS .expression , MOD
+17. expression -> .expression PLUS expression , RPAREN
+18. expression -> .expression MINUS expression , RPAREN
+19. expression -> .expression MULT expression , RPAREN
+20. expression -> .expression DIV expression , RPAREN
+21. expression -> .expression MOD expression , RPAREN
+22. expression -> .LPAREN expression RPAREN , RPAREN
+23. expression -> .ID , RPAREN
+24. expression -> .literal , RPAREN
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , RPAREN
+26. literal -> .DEC , RPAREN
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 76:
+22. expression -> LPAREN expression RPAREN ., SEMI
+22. expression -> LPAREN expression RPAREN ., PLUS
+22. expression -> LPAREN expression RPAREN ., MINUS
+22. expression -> LPAREN expression RPAREN ., MULT
+22. expression -> LPAREN expression RPAREN ., DIV
+22. expression -> LPAREN expression RPAREN ., MOD
+-----------------------------
+State 77:
+20. expression -> expression DIV expression ., SEMI
+20. expression -> expression DIV expression ., PLUS
+20. expression -> expression DIV expression ., MINUS
+20. expression -> expression DIV expression ., MULT
+20. expression -> expression DIV expression ., DIV
+20. expression -> expression DIV expression ., MOD
+17. expression -> expression .PLUS expression , SEMI
+18. expression -> expression .MINUS expression , SEMI
+19. expression -> expression .MULT expression , SEMI
+20. expression -> expression .DIV expression , SEMI
+21. expression -> expression .MOD expression , SEMI
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 78:
+18. expression -> expression MINUS expression ., SEMI
+18. expression -> expression MINUS expression ., PLUS
+18. expression -> expression MINUS expression ., MINUS
+18. expression -> expression MINUS expression ., MULT
+18. expression -> expression MINUS expression ., DIV
+18. expression -> expression MINUS expression ., MOD
+17. expression -> expression .PLUS expression , SEMI
+18. expression -> expression .MINUS expression , SEMI
+19. expression -> expression .MULT expression , SEMI
+20. expression -> expression .DIV expression , SEMI
+21. expression -> expression .MOD expression , SEMI
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 79:
+21. expression -> expression MOD expression ., SEMI
+21. expression -> expression MOD expression ., PLUS
+21. expression -> expression MOD expression ., MINUS
+21. expression -> expression MOD expression ., MULT
+21. expression -> expression MOD expression ., DIV
+21. expression -> expression MOD expression ., MOD
+17. expression -> expression .PLUS expression , SEMI
+18. expression -> expression .MINUS expression , SEMI
+19. expression -> expression .MULT expression , SEMI
+20. expression -> expression .DIV expression , SEMI
+21. expression -> expression .MOD expression , SEMI
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 80:
+19. expression -> expression MULT expression ., SEMI
+19. expression -> expression MULT expression ., PLUS
+19. expression -> expression MULT expression ., MINUS
+19. expression -> expression MULT expression ., MULT
+19. expression -> expression MULT expression ., DIV
+19. expression -> expression MULT expression ., MOD
+17. expression -> expression .PLUS expression , SEMI
+18. expression -> expression .MINUS expression , SEMI
+19. expression -> expression .MULT expression , SEMI
+20. expression -> expression .DIV expression , SEMI
+21. expression -> expression .MOD expression , SEMI
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 81:
+17. expression -> expression PLUS expression ., SEMI
+17. expression -> expression PLUS expression ., PLUS
+17. expression -> expression PLUS expression ., MINUS
+17. expression -> expression PLUS expression ., MULT
+17. expression -> expression PLUS expression ., DIV
+17. expression -> expression PLUS expression ., MOD
+17. expression -> expression .PLUS expression , SEMI
+18. expression -> expression .MINUS expression , SEMI
+19. expression -> expression .MULT expression , SEMI
+20. expression -> expression .DIV expression , SEMI
+21. expression -> expression .MOD expression , SEMI
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 82:
+22. expression -> LPAREN expression .RPAREN , LT
+22. expression -> LPAREN expression .RPAREN , GT
+22. expression -> LPAREN expression .RPAREN , PLUS
+22. expression -> LPAREN expression .RPAREN , MINUS
+22. expression -> LPAREN expression .RPAREN , MULT
+22. expression -> LPAREN expression .RPAREN , DIV
+22. expression -> LPAREN expression .RPAREN , MOD
+17. expression -> expression .PLUS expression , RPAREN
+18. expression -> expression .MINUS expression , RPAREN
+19. expression -> expression .MULT expression , RPAREN
+20. expression -> expression .DIV expression , RPAREN
+21. expression -> expression .MOD expression , RPAREN
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 83:
+27. while_stmt -> WHILE LPAREN condition RPAREN .LBRACE statement_list RBRACE , FLOAT
+27. while_stmt -> WHILE LPAREN condition RPAREN .LBRACE statement_list RBRACE , ID
+27. while_stmt -> WHILE LPAREN condition RPAREN .LBRACE statement_list RBRACE , INT
+27. while_stmt -> WHILE LPAREN condition RPAREN .LBRACE statement_list RBRACE , RBRACE
+-----------------------------
+State 84:
+20. expression -> expression DIV .expression , LT
+20. expression -> expression DIV .expression , GT
+20. expression -> expression DIV .expression , PLUS
+20. expression -> expression DIV .expression , MINUS
+20. expression -> expression DIV .expression , MULT
+20. expression -> expression DIV .expression , DIV
+20. expression -> expression DIV .expression , MOD
+17. expression -> .expression PLUS expression , LT
+18. expression -> .expression MINUS expression , LT
+19. expression -> .expression MULT expression , LT
+20. expression -> .expression DIV expression , LT
+21. expression -> .expression MOD expression , LT
+22. expression -> .LPAREN expression RPAREN , LT
+23. expression -> .ID , LT
+24. expression -> .literal , LT
+17. expression -> .expression PLUS expression , GT
+18. expression -> .expression MINUS expression , GT
+19. expression -> .expression MULT expression , GT
+20. expression -> .expression DIV expression , GT
+21. expression -> .expression MOD expression , GT
+22. expression -> .LPAREN expression RPAREN , GT
+23. expression -> .ID , GT
+24. expression -> .literal , GT
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , LT
+26. literal -> .DEC , LT
+25. literal -> .NUM , GT
+26. literal -> .DEC , GT
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 85:
+29. condition -> expression GT .expression , RPAREN
+17. expression -> .expression PLUS expression , RPAREN
+18. expression -> .expression MINUS expression , RPAREN
+19. expression -> .expression MULT expression , RPAREN
+20. expression -> .expression DIV expression , RPAREN
+21. expression -> .expression MOD expression , RPAREN
+22. expression -> .LPAREN expression RPAREN , RPAREN
+23. expression -> .ID , RPAREN
+24. expression -> .literal , RPAREN
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , RPAREN
+26. literal -> .DEC , RPAREN
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 86:
+28. condition -> expression LT .expression , RPAREN
+17. expression -> .expression PLUS expression , RPAREN
+18. expression -> .expression MINUS expression , RPAREN
+19. expression -> .expression MULT expression , RPAREN
+20. expression -> .expression DIV expression , RPAREN
+21. expression -> .expression MOD expression , RPAREN
+22. expression -> .LPAREN expression RPAREN , RPAREN
+23. expression -> .ID , RPAREN
+24. expression -> .literal , RPAREN
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , RPAREN
+26. literal -> .DEC , RPAREN
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 87:
+18. expression -> expression MINUS .expression , LT
+18. expression -> expression MINUS .expression , GT
+18. expression -> expression MINUS .expression , PLUS
+18. expression -> expression MINUS .expression , MINUS
+18. expression -> expression MINUS .expression , MULT
+18. expression -> expression MINUS .expression , DIV
+18. expression -> expression MINUS .expression , MOD
+17. expression -> .expression PLUS expression , LT
+18. expression -> .expression MINUS expression , LT
+19. expression -> .expression MULT expression , LT
+20. expression -> .expression DIV expression , LT
+21. expression -> .expression MOD expression , LT
+22. expression -> .LPAREN expression RPAREN , LT
+23. expression -> .ID , LT
+24. expression -> .literal , LT
+17. expression -> .expression PLUS expression , GT
+18. expression -> .expression MINUS expression , GT
+19. expression -> .expression MULT expression , GT
+20. expression -> .expression DIV expression , GT
+21. expression -> .expression MOD expression , GT
+22. expression -> .LPAREN expression RPAREN , GT
+23. expression -> .ID , GT
+24. expression -> .literal , GT
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , LT
+26. literal -> .DEC , LT
+25. literal -> .NUM , GT
+26. literal -> .DEC , GT
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 88:
+21. expression -> expression MOD .expression , LT
+21. expression -> expression MOD .expression , GT
+21. expression -> expression MOD .expression , PLUS
+21. expression -> expression MOD .expression , MINUS
+21. expression -> expression MOD .expression , MULT
+21. expression -> expression MOD .expression , DIV
+21. expression -> expression MOD .expression , MOD
+17. expression -> .expression PLUS expression , LT
+18. expression -> .expression MINUS expression , LT
+19. expression -> .expression MULT expression , LT
+20. expression -> .expression DIV expression , LT
+21. expression -> .expression MOD expression , LT
+22. expression -> .LPAREN expression RPAREN , LT
+23. expression -> .ID , LT
+24. expression -> .literal , LT
+17. expression -> .expression PLUS expression , GT
+18. expression -> .expression MINUS expression , GT
+19. expression -> .expression MULT expression , GT
+20. expression -> .expression DIV expression , GT
+21. expression -> .expression MOD expression , GT
+22. expression -> .LPAREN expression RPAREN , GT
+23. expression -> .ID , GT
+24. expression -> .literal , GT
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , LT
+26. literal -> .DEC , LT
+25. literal -> .NUM , GT
+26. literal -> .DEC , GT
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 89:
+19. expression -> expression MULT .expression , LT
+19. expression -> expression MULT .expression , GT
+19. expression -> expression MULT .expression , PLUS
+19. expression -> expression MULT .expression , MINUS
+19. expression -> expression MULT .expression , MULT
+19. expression -> expression MULT .expression , DIV
+19. expression -> expression MULT .expression , MOD
+17. expression -> .expression PLUS expression , LT
+18. expression -> .expression MINUS expression , LT
+19. expression -> .expression MULT expression , LT
+20. expression -> .expression DIV expression , LT
+21. expression -> .expression MOD expression , LT
+22. expression -> .LPAREN expression RPAREN , LT
+23. expression -> .ID , LT
+24. expression -> .literal , LT
+17. expression -> .expression PLUS expression , GT
+18. expression -> .expression MINUS expression , GT
+19. expression -> .expression MULT expression , GT
+20. expression -> .expression DIV expression , GT
+21. expression -> .expression MOD expression , GT
+22. expression -> .LPAREN expression RPAREN , GT
+23. expression -> .ID , GT
+24. expression -> .literal , GT
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , LT
+26. literal -> .DEC , LT
+25. literal -> .NUM , GT
+26. literal -> .DEC , GT
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 90:
+17. expression -> expression PLUS .expression , LT
+17. expression -> expression PLUS .expression , GT
+17. expression -> expression PLUS .expression , PLUS
+17. expression -> expression PLUS .expression , MINUS
+17. expression -> expression PLUS .expression , MULT
+17. expression -> expression PLUS .expression , DIV
+17. expression -> expression PLUS .expression , MOD
+17. expression -> .expression PLUS expression , LT
+18. expression -> .expression MINUS expression , LT
+19. expression -> .expression MULT expression , LT
+20. expression -> .expression DIV expression , LT
+21. expression -> .expression MOD expression , LT
+22. expression -> .LPAREN expression RPAREN , LT
+23. expression -> .ID , LT
+24. expression -> .literal , LT
+17. expression -> .expression PLUS expression , GT
+18. expression -> .expression MINUS expression , GT
+19. expression -> .expression MULT expression , GT
+20. expression -> .expression DIV expression , GT
+21. expression -> .expression MOD expression , GT
+22. expression -> .LPAREN expression RPAREN , GT
+23. expression -> .ID , GT
+24. expression -> .literal , GT
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , LT
+26. literal -> .DEC , LT
+25. literal -> .NUM , GT
+26. literal -> .DEC , GT
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 91:
+15. inc_dec_statement -> ID DECC SEMI ., RBRACE
+15. inc_dec_statement -> ID DECC SEMI ., FLOAT
+15. inc_dec_statement -> ID DECC SEMI ., ID
+15. inc_dec_statement -> ID DECC SEMI ., INT
+-----------------------------
+State 92:
+16. assignment -> ID EQ expression .SEMI , RBRACE
+16. assignment -> ID EQ expression .SEMI , FLOAT
+16. assignment -> ID EQ expression .SEMI , ID
+16. assignment -> ID EQ expression .SEMI , INT
+17. expression -> expression .PLUS expression , SEMI
+18. expression -> expression .MINUS expression , SEMI
+19. expression -> expression .MULT expression , SEMI
+20. expression -> expression .DIV expression , SEMI
+21. expression -> expression .MOD expression , SEMI
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 93:
+14. inc_dec_statement -> ID INC SEMI ., RBRACE
+14. inc_dec_statement -> ID INC SEMI ., FLOAT
+14. inc_dec_statement -> ID INC SEMI ., ID
+14. inc_dec_statement -> ID INC SEMI ., INT
+-----------------------------
+State 94:
+5. declaration -> type_specifier ID EQ .literal SEMI , RBRACE
+6. declaration -> type_specifier ID EQ .expression SEMI , RBRACE
+5. declaration -> type_specifier ID EQ .literal SEMI , FLOAT
+6. declaration -> type_specifier ID EQ .expression SEMI , FLOAT
+5. declaration -> type_specifier ID EQ .literal SEMI , ID
+6. declaration -> type_specifier ID EQ .expression SEMI , ID
+5. declaration -> type_specifier ID EQ .literal SEMI , INT
+6. declaration -> type_specifier ID EQ .expression SEMI , INT
+25. literal -> .NUM , SEMI
+26. literal -> .DEC , SEMI
+17. expression -> .expression PLUS expression , SEMI
+18. expression -> .expression MINUS expression , SEMI
+19. expression -> .expression MULT expression , SEMI
+20. expression -> .expression DIV expression , SEMI
+21. expression -> .expression MOD expression , SEMI
+22. expression -> .LPAREN expression RPAREN , SEMI
+23. expression -> .ID , SEMI
+24. expression -> .literal , SEMI
+17. expression -> .expression PLUS expression , PLUS
+18. expression -> .expression MINUS expression , PLUS
+19. expression -> .expression MULT expression , PLUS
+20. expression -> .expression DIV expression , PLUS
+21. expression -> .expression MOD expression , PLUS
+22. expression -> .LPAREN expression RPAREN , PLUS
+23. expression -> .ID , PLUS
+24. expression -> .literal , PLUS
+17. expression -> .expression PLUS expression , MINUS
+18. expression -> .expression MINUS expression , MINUS
+19. expression -> .expression MULT expression , MINUS
+20. expression -> .expression DIV expression , MINUS
+21. expression -> .expression MOD expression , MINUS
+22. expression -> .LPAREN expression RPAREN , MINUS
+23. expression -> .ID , MINUS
+24. expression -> .literal , MINUS
+17. expression -> .expression PLUS expression , MULT
+18. expression -> .expression MINUS expression , MULT
+19. expression -> .expression MULT expression , MULT
+20. expression -> .expression DIV expression , MULT
+21. expression -> .expression MOD expression , MULT
+22. expression -> .LPAREN expression RPAREN , MULT
+23. expression -> .ID , MULT
+24. expression -> .literal , MULT
+17. expression -> .expression PLUS expression , DIV
+18. expression -> .expression MINUS expression , DIV
+19. expression -> .expression MULT expression , DIV
+20. expression -> .expression DIV expression , DIV
+21. expression -> .expression MOD expression , DIV
+22. expression -> .LPAREN expression RPAREN , DIV
+23. expression -> .ID , DIV
+24. expression -> .literal , DIV
+17. expression -> .expression PLUS expression , MOD
+18. expression -> .expression MINUS expression , MOD
+19. expression -> .expression MULT expression , MOD
+20. expression -> .expression DIV expression , MOD
+21. expression -> .expression MOD expression , MOD
+22. expression -> .LPAREN expression RPAREN , MOD
+23. expression -> .ID , MOD
+24. expression -> .literal , MOD
+25. literal -> .NUM , PLUS
+26. literal -> .DEC , PLUS
+25. literal -> .NUM , MINUS
+26. literal -> .DEC , MINUS
+25. literal -> .NUM , MULT
+26. literal -> .DEC , MULT
+25. literal -> .NUM , DIV
+26. literal -> .DEC , DIV
+25. literal -> .NUM , MOD
+26. literal -> .DEC , MOD
+-----------------------------
+State 95:
+6. declaration -> type_specifier ID EQ expression SEMI ., WHILE
+6. declaration -> type_specifier ID EQ expression SEMI ., RBRACE
+6. declaration -> type_specifier ID EQ expression SEMI ., FLOAT
+6. declaration -> type_specifier ID EQ expression SEMI ., ID
+6. declaration -> type_specifier ID EQ expression SEMI ., INT
+-----------------------------
+State 96:
+5. declaration -> type_specifier ID EQ literal SEMI ., WHILE
+5. declaration -> type_specifier ID EQ literal SEMI ., RBRACE
+5. declaration -> type_specifier ID EQ literal SEMI ., FLOAT
+5. declaration -> type_specifier ID EQ literal SEMI ., ID
+5. declaration -> type_specifier ID EQ literal SEMI ., INT
+-----------------------------
+State 97:
+22. expression -> LPAREN expression RPAREN ., RPAREN
+22. expression -> LPAREN expression RPAREN ., PLUS
+22. expression -> LPAREN expression RPAREN ., MINUS
+22. expression -> LPAREN expression RPAREN ., MULT
+22. expression -> LPAREN expression RPAREN ., DIV
+22. expression -> LPAREN expression RPAREN ., MOD
+-----------------------------
+State 98:
+20. expression -> expression DIV expression ., RPAREN
+20. expression -> expression DIV expression ., PLUS
+20. expression -> expression DIV expression ., MINUS
+20. expression -> expression DIV expression ., MULT
+20. expression -> expression DIV expression ., DIV
+20. expression -> expression DIV expression ., MOD
+17. expression -> expression .PLUS expression , RPAREN
+18. expression -> expression .MINUS expression , RPAREN
+19. expression -> expression .MULT expression , RPAREN
+20. expression -> expression .DIV expression , RPAREN
+21. expression -> expression .MOD expression , RPAREN
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 99:
+18. expression -> expression MINUS expression ., RPAREN
+18. expression -> expression MINUS expression ., PLUS
+18. expression -> expression MINUS expression ., MINUS
+18. expression -> expression MINUS expression ., MULT
+18. expression -> expression MINUS expression ., DIV
+18. expression -> expression MINUS expression ., MOD
+17. expression -> expression .PLUS expression , RPAREN
+18. expression -> expression .MINUS expression , RPAREN
+19. expression -> expression .MULT expression , RPAREN
+20. expression -> expression .DIV expression , RPAREN
+21. expression -> expression .MOD expression , RPAREN
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 100:
+21. expression -> expression MOD expression ., RPAREN
+21. expression -> expression MOD expression ., PLUS
+21. expression -> expression MOD expression ., MINUS
+21. expression -> expression MOD expression ., MULT
+21. expression -> expression MOD expression ., DIV
+21. expression -> expression MOD expression ., MOD
+17. expression -> expression .PLUS expression , RPAREN
+18. expression -> expression .MINUS expression , RPAREN
+19. expression -> expression .MULT expression , RPAREN
+20. expression -> expression .DIV expression , RPAREN
+21. expression -> expression .MOD expression , RPAREN
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 101:
+19. expression -> expression MULT expression ., RPAREN
+19. expression -> expression MULT expression ., PLUS
+19. expression -> expression MULT expression ., MINUS
+19. expression -> expression MULT expression ., MULT
+19. expression -> expression MULT expression ., DIV
+19. expression -> expression MULT expression ., MOD
+17. expression -> expression .PLUS expression , RPAREN
+18. expression -> expression .MINUS expression , RPAREN
+19. expression -> expression .MULT expression , RPAREN
+20. expression -> expression .DIV expression , RPAREN
+21. expression -> expression .MOD expression , RPAREN
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 102:
+17. expression -> expression PLUS expression ., RPAREN
+17. expression -> expression PLUS expression ., PLUS
+17. expression -> expression PLUS expression ., MINUS
+17. expression -> expression PLUS expression ., MULT
+17. expression -> expression PLUS expression ., DIV
+17. expression -> expression PLUS expression ., MOD
+17. expression -> expression .PLUS expression , RPAREN
+18. expression -> expression .MINUS expression , RPAREN
+19. expression -> expression .MULT expression , RPAREN
+20. expression -> expression .DIV expression , RPAREN
+21. expression -> expression .MOD expression , RPAREN
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 103:
+22. expression -> LPAREN expression RPAREN ., LT
+22. expression -> LPAREN expression RPAREN ., GT
+22. expression -> LPAREN expression RPAREN ., PLUS
+22. expression -> LPAREN expression RPAREN ., MINUS
+22. expression -> LPAREN expression RPAREN ., MULT
+22. expression -> LPAREN expression RPAREN ., DIV
+22. expression -> LPAREN expression RPAREN ., MOD
+-----------------------------
+State 104:
+27. while_stmt -> WHILE LPAREN condition RPAREN LBRACE .statement_list RBRACE , FLOAT
+27. while_stmt -> WHILE LPAREN condition RPAREN LBRACE .statement_list RBRACE , ID
+27. while_stmt -> WHILE LPAREN condition RPAREN LBRACE .statement_list RBRACE , INT
+27. while_stmt -> WHILE LPAREN condition RPAREN LBRACE .statement_list RBRACE , RBRACE
+9. statement_list -> .statement , RBRACE
+10. statement_list -> .statement_list statement , RBRACE
+11. statement -> .assignment , RBRACE
+12. statement -> .declaration , RBRACE
+13. statement -> .inc_dec_statement , RBRACE
+9. statement_list -> .statement , FLOAT
+9. statement_list -> .statement , ID
+9. statement_list -> .statement , INT
+10. statement_list -> .statement_list statement , FLOAT
+10. statement_list -> .statement_list statement , ID
+10. statement_list -> .statement_list statement , INT
+16. assignment -> .ID EQ expression SEMI , RBRACE
+5. declaration -> .type_specifier ID EQ literal SEMI , RBRACE
+6. declaration -> .type_specifier ID EQ expression SEMI , RBRACE
+14. inc_dec_statement -> .ID INC SEMI , RBRACE
+15. inc_dec_statement -> .ID DECC SEMI , RBRACE
+11. statement -> .assignment , FLOAT
+12. statement -> .declaration , FLOAT
+13. statement -> .inc_dec_statement , FLOAT
+11. statement -> .assignment , ID
+12. statement -> .declaration , ID
+13. statement -> .inc_dec_statement , ID
+11. statement -> .assignment , INT
+12. statement -> .declaration , INT
+13. statement -> .inc_dec_statement , INT
+7. type_specifier -> .INT , ID
+8. type_specifier -> .FLOAT , ID
+16. assignment -> .ID EQ expression SEMI , FLOAT
+5. declaration -> .type_specifier ID EQ literal SEMI , FLOAT
+6. declaration -> .type_specifier ID EQ expression SEMI , FLOAT
+14. inc_dec_statement -> .ID INC SEMI , FLOAT
+15. inc_dec_statement -> .ID DECC SEMI , FLOAT
+16. assignment -> .ID EQ expression SEMI , ID
+5. declaration -> .type_specifier ID EQ literal SEMI , ID
+6. declaration -> .type_specifier ID EQ expression SEMI , ID
+14. inc_dec_statement -> .ID INC SEMI , ID
+15. inc_dec_statement -> .ID DECC SEMI , ID
+16. assignment -> .ID EQ expression SEMI , INT
+5. declaration -> .type_specifier ID EQ literal SEMI , INT
+6. declaration -> .type_specifier ID EQ expression SEMI , INT
+14. inc_dec_statement -> .ID INC SEMI , INT
+15. inc_dec_statement -> .ID DECC SEMI , INT
+-----------------------------
+State 105:
+20. expression -> expression DIV expression ., LT
+20. expression -> expression DIV expression ., GT
+20. expression -> expression DIV expression ., PLUS
+20. expression -> expression DIV expression ., MINUS
+20. expression -> expression DIV expression ., MULT
+20. expression -> expression DIV expression ., DIV
+20. expression -> expression DIV expression ., MOD
+17. expression -> expression .PLUS expression , LT
+18. expression -> expression .MINUS expression , LT
+19. expression -> expression .MULT expression , LT
+20. expression -> expression .DIV expression , LT
+21. expression -> expression .MOD expression , LT
+17. expression -> expression .PLUS expression , GT
+18. expression -> expression .MINUS expression , GT
+19. expression -> expression .MULT expression , GT
+20. expression -> expression .DIV expression , GT
+21. expression -> expression .MOD expression , GT
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 106:
+29. condition -> expression GT expression ., RPAREN
+17. expression -> expression .PLUS expression , RPAREN
+18. expression -> expression .MINUS expression , RPAREN
+19. expression -> expression .MULT expression , RPAREN
+20. expression -> expression .DIV expression , RPAREN
+21. expression -> expression .MOD expression , RPAREN
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 107:
+28. condition -> expression LT expression ., RPAREN
+17. expression -> expression .PLUS expression , RPAREN
+18. expression -> expression .MINUS expression , RPAREN
+19. expression -> expression .MULT expression , RPAREN
+20. expression -> expression .DIV expression , RPAREN
+21. expression -> expression .MOD expression , RPAREN
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 108:
+18. expression -> expression MINUS expression ., LT
+18. expression -> expression MINUS expression ., GT
+18. expression -> expression MINUS expression ., PLUS
+18. expression -> expression MINUS expression ., MINUS
+18. expression -> expression MINUS expression ., MULT
+18. expression -> expression MINUS expression ., DIV
+18. expression -> expression MINUS expression ., MOD
+17. expression -> expression .PLUS expression , LT
+18. expression -> expression .MINUS expression , LT
+19. expression -> expression .MULT expression , LT
+20. expression -> expression .DIV expression , LT
+21. expression -> expression .MOD expression , LT
+17. expression -> expression .PLUS expression , GT
+18. expression -> expression .MINUS expression , GT
+19. expression -> expression .MULT expression , GT
+20. expression -> expression .DIV expression , GT
+21. expression -> expression .MOD expression , GT
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 109:
+21. expression -> expression MOD expression ., LT
+21. expression -> expression MOD expression ., GT
+21. expression -> expression MOD expression ., PLUS
+21. expression -> expression MOD expression ., MINUS
+21. expression -> expression MOD expression ., MULT
+21. expression -> expression MOD expression ., DIV
+21. expression -> expression MOD expression ., MOD
+17. expression -> expression .PLUS expression , LT
+18. expression -> expression .MINUS expression , LT
+19. expression -> expression .MULT expression , LT
+20. expression -> expression .DIV expression , LT
+21. expression -> expression .MOD expression , LT
+17. expression -> expression .PLUS expression , GT
+18. expression -> expression .MINUS expression , GT
+19. expression -> expression .MULT expression , GT
+20. expression -> expression .DIV expression , GT
+21. expression -> expression .MOD expression , GT
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 110:
+19. expression -> expression MULT expression ., LT
+19. expression -> expression MULT expression ., GT
+19. expression -> expression MULT expression ., PLUS
+19. expression -> expression MULT expression ., MINUS
+19. expression -> expression MULT expression ., MULT
+19. expression -> expression MULT expression ., DIV
+19. expression -> expression MULT expression ., MOD
+17. expression -> expression .PLUS expression , LT
+18. expression -> expression .MINUS expression , LT
+19. expression -> expression .MULT expression , LT
+20. expression -> expression .DIV expression , LT
+21. expression -> expression .MOD expression , LT
+17. expression -> expression .PLUS expression , GT
+18. expression -> expression .MINUS expression , GT
+19. expression -> expression .MULT expression , GT
+20. expression -> expression .DIV expression , GT
+21. expression -> expression .MOD expression , GT
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 111:
+17. expression -> expression PLUS expression ., LT
+17. expression -> expression PLUS expression ., GT
+17. expression -> expression PLUS expression ., PLUS
+17. expression -> expression PLUS expression ., MINUS
+17. expression -> expression PLUS expression ., MULT
+17. expression -> expression PLUS expression ., DIV
+17. expression -> expression PLUS expression ., MOD
+17. expression -> expression .PLUS expression , LT
+18. expression -> expression .MINUS expression , LT
+19. expression -> expression .MULT expression , LT
+20. expression -> expression .DIV expression , LT
+21. expression -> expression .MOD expression , LT
+17. expression -> expression .PLUS expression , GT
+18. expression -> expression .MINUS expression , GT
+19. expression -> expression .MULT expression , GT
+20. expression -> expression .DIV expression , GT
+21. expression -> expression .MOD expression , GT
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 112:
+16. assignment -> ID EQ expression SEMI ., RBRACE
+16. assignment -> ID EQ expression SEMI ., FLOAT
+16. assignment -> ID EQ expression SEMI ., ID
+16. assignment -> ID EQ expression SEMI ., INT
+-----------------------------
+State 113:
+6. declaration -> type_specifier ID EQ expression .SEMI , RBRACE
+6. declaration -> type_specifier ID EQ expression .SEMI , FLOAT
+6. declaration -> type_specifier ID EQ expression .SEMI , ID
+6. declaration -> type_specifier ID EQ expression .SEMI , INT
+17. expression -> expression .PLUS expression , SEMI
+18. expression -> expression .MINUS expression , SEMI
+19. expression -> expression .MULT expression , SEMI
+20. expression -> expression .DIV expression , SEMI
+21. expression -> expression .MOD expression , SEMI
+17. expression -> expression .PLUS expression , PLUS
+18. expression -> expression .MINUS expression , PLUS
+19. expression -> expression .MULT expression , PLUS
+20. expression -> expression .DIV expression , PLUS
+21. expression -> expression .MOD expression , PLUS
+17. expression -> expression .PLUS expression , MINUS
+18. expression -> expression .MINUS expression , MINUS
+19. expression -> expression .MULT expression , MINUS
+20. expression -> expression .DIV expression , MINUS
+21. expression -> expression .MOD expression , MINUS
+17. expression -> expression .PLUS expression , MULT
+18. expression -> expression .MINUS expression , MULT
+19. expression -> expression .MULT expression , MULT
+20. expression -> expression .DIV expression , MULT
+21. expression -> expression .MOD expression , MULT
+17. expression -> expression .PLUS expression , DIV
+18. expression -> expression .MINUS expression , DIV
+19. expression -> expression .MULT expression , DIV
+20. expression -> expression .DIV expression , DIV
+21. expression -> expression .MOD expression , DIV
+17. expression -> expression .PLUS expression , MOD
+18. expression -> expression .MINUS expression , MOD
+19. expression -> expression .MULT expression , MOD
+20. expression -> expression .DIV expression , MOD
+21. expression -> expression .MOD expression , MOD
+-----------------------------
+State 114:
+5. declaration -> type_specifier ID EQ literal .SEMI , RBRACE
+5. declaration -> type_specifier ID EQ literal .SEMI , FLOAT
+5. declaration -> type_specifier ID EQ literal .SEMI , ID
+5. declaration -> type_specifier ID EQ literal .SEMI , INT
+24. expression -> literal ., SEMI
+24. expression -> literal ., PLUS
+24. expression -> literal ., MINUS
+24. expression -> literal ., MULT
+24. expression -> literal ., DIV
+24. expression -> literal ., MOD
+-----------------------------
+State 115:
+27. while_stmt -> WHILE LPAREN condition RPAREN LBRACE statement_list .RBRACE , FLOAT
+27. while_stmt -> WHILE LPAREN condition RPAREN LBRACE statement_list .RBRACE , ID
+27. while_stmt -> WHILE LPAREN condition RPAREN LBRACE statement_list .RBRACE , INT
+27. while_stmt -> WHILE LPAREN condition RPAREN LBRACE statement_list .RBRACE , RBRACE
+10. statement_list -> statement_list .statement , RBRACE
+10. statement_list -> statement_list .statement , FLOAT
+10. statement_list -> statement_list .statement , ID
+10. statement_list -> statement_list .statement , INT
+11. statement -> .assignment , RBRACE
+12. statement -> .declaration , RBRACE
+13. statement -> .inc_dec_statement , RBRACE
+11. statement -> .assignment , FLOAT
+12. statement -> .declaration , FLOAT
+13. statement -> .inc_dec_statement , FLOAT
+11. statement -> .assignment , ID
+12. statement -> .declaration , ID
+13. statement -> .inc_dec_statement , ID
+11. statement -> .assignment , INT
+12. statement -> .declaration , INT
+13. statement -> .inc_dec_statement , INT
+16. assignment -> .ID EQ expression SEMI , RBRACE
+5. declaration -> .type_specifier ID EQ literal SEMI , RBRACE
+6. declaration -> .type_specifier ID EQ expression SEMI , RBRACE
+14. inc_dec_statement -> .ID INC SEMI , RBRACE
+15. inc_dec_statement -> .ID DECC SEMI , RBRACE
+16. assignment -> .ID EQ expression SEMI , FLOAT
+5. declaration -> .type_specifier ID EQ literal SEMI , FLOAT
+6. declaration -> .type_specifier ID EQ expression SEMI , FLOAT
+14. inc_dec_statement -> .ID INC SEMI , FLOAT
+15. inc_dec_statement -> .ID DECC SEMI , FLOAT
+16. assignment -> .ID EQ expression SEMI , ID
+5. declaration -> .type_specifier ID EQ literal SEMI , ID
+6. declaration -> .type_specifier ID EQ expression SEMI , ID
+14. inc_dec_statement -> .ID INC SEMI , ID
+15. inc_dec_statement -> .ID DECC SEMI , ID
+16. assignment -> .ID EQ expression SEMI , INT
+5. declaration -> .type_specifier ID EQ literal SEMI , INT
+6. declaration -> .type_specifier ID EQ expression SEMI , INT
+14. inc_dec_statement -> .ID INC SEMI , INT
+15. inc_dec_statement -> .ID DECC SEMI , INT
+7. type_specifier -> .INT , ID
+8. type_specifier -> .FLOAT , ID
+-----------------------------
+State 116:
+6. declaration -> type_specifier ID EQ expression SEMI ., RBRACE
+6. declaration -> type_specifier ID EQ expression SEMI ., FLOAT
+6. declaration -> type_specifier ID EQ expression SEMI ., ID
+6. declaration -> type_specifier ID EQ expression SEMI ., INT
+-----------------------------
+State 117:
+5. declaration -> type_specifier ID EQ literal SEMI ., RBRACE
+5. declaration -> type_specifier ID EQ literal SEMI ., FLOAT
+5. declaration -> type_specifier ID EQ literal SEMI ., ID
+5. declaration -> type_specifier ID EQ literal SEMI ., INT
+-----------------------------
+State 118:
+27. while_stmt -> WHILE LPAREN condition RPAREN LBRACE statement_list RBRACE ., FLOAT
+27. while_stmt -> WHILE LPAREN condition RPAREN LBRACE statement_list RBRACE ., ID
+27. while_stmt -> WHILE LPAREN condition RPAREN LBRACE statement_list RBRACE ., INT
+27. while_stmt -> WHILE LPAREN condition RPAREN LBRACE statement_list RBRACE ., RBRACE
 -----------------------------

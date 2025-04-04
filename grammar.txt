@@ -24,6 +24,11 @@ statement_list: statement
 
 statement: assignment
     | declaration
+    | inc_dec_statement
+    ;
+
+inc_dec_statement: ID INC SEMI
+    | ID DECC SEMI
     ;
 
 assignment: ID EQ expression SEMI
@@ -34,8 +39,6 @@ expression: expression PLUS expression
     | expression MULT expression
     | expression DIV expression
     | expression MOD expression
-    | expression INC
-    | expression DECC
     | LPAREN expression RPAREN
     | ID
     | literal

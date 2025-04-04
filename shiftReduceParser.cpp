@@ -37,13 +37,15 @@ public:
             int currentState = stateStack.top();
             string currentToken = tokens[tokenIndex];
 
+            outputFile << "\nCurrent State: " << currentState << ", Current Token: " << currentToken << endl; 
             if (parsingTable.count({currentState, currentToken})) {
                 string action = parsingTable[{currentState, currentToken}];
 
+                outputFile << "Action: " << action << endl;
                 if (action[0] == 's') {  
                     int nextState = stoi(action.substr(1));
 
-                    outputFile << "Shift: " << currentToken << endl;
+                    outputFile << "Shift: " << currentToken << "\n\n"<<endl;
 
                     parseStack.push(currentToken);
                     stateStack.push(nextState);
@@ -64,14 +66,15 @@ public:
 
                     outputFile << "Reduce: " << lhs << " → ";
                     for (const string& s : rhs) outputFile << s << " ";
-                    outputFile << endl;
+                    outputFile <<"\n\n"<< endl;
                 } 
                 else if (action == "Accept") {  
-                    outputFile << "Parsing successful!" << endl;
+                    outputFile << "\n\nParsing successful!" << endl;
                     return;
                 }
             } 
             else {
+                cerr << "Parsing failed at state " << currentState << " with token " << currentToken << endl;
                 outputFile << "Parsing failed!" << endl;
                 return;
             }

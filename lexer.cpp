@@ -98,6 +98,40 @@ void tokenise(const string &code)
     {
         bool matched = false;
 
+        // Ignore single-line comments (//...)
+        if (remainingCode.substr(0, 2) == "//")
+        {
+            size_t newLinePos = remainingCode.find('\n');
+            if (newLinePos != string::npos)
+            {
+                remainingCode = remainingCode.substr(newLinePos + 1); 
+                lineNo++;
+                pos = 0;
+            }
+            else
+                break; 
+            continue;
+        }
+
+        // Ignore multi-line comments (/* ... */)
+        if (remainingCode.substr(0, 2) == "/*")
+        {
+            size_t endCommentPos = remainingCode.find("*/");
+            if (endCommentPos != string::npos)
+            {
+                size_t newLineCount = count(remainingCode.begin(), remainingCode.begin() + endCommentPos, '\n');
+                lineNo += newLineCount;
+                pos = 0;
+                remainingCode = remainingCode.substr(endCommentPos + 2); 
+            }
+            else
+            {
+                cout << "Lexical Error: Unterminated comment at line " << lineNo << endl;
+                return;
+            }
+            continue;
+        }
+
         for (const auto &pattern : tokenPatterns)
         {
             smatch match;

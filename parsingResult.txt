@@ -1,10 +1,300 @@
-Shift: c
-Shift: c
-Shift: d
-Reduce: C → d 
-Reduce: C → c C 
-Reduce: C → c C 
-Shift: d
-Reduce: C → d 
-Reduce: S → C C 
+
+Current State: 0, Current Token: INT
+Action: s1
+Shift: INT
+
+
+
+Current State: 1, Current Token: MAIN
+Action: s3
+Shift: MAIN
+
+
+
+Current State: 3, Current Token: LPAREN
+Action: s4
+Shift: LPAREN
+
+
+
+Current State: 4, Current Token: RPAREN
+Action: s5
+Shift: RPAREN
+
+
+
+Current State: 5, Current Token: LBRACE
+Action: s6
+Shift: LBRACE
+
+
+
+Current State: 6, Current Token: INT
+Action: s10
+Shift: INT
+
+
+
+Current State: 10, Current Token: ID
+Action: r7
+Reduce: type_specifier → INT 
+
+
+
+Current State: 16, Current Token: ID
+Action: s24
+Shift: ID
+
+
+
+Current State: 24, Current Token: EQ
+Action: s42
+Shift: EQ
+
+
+
+Current State: 42, Current Token: NUM
+Action: s29
+Shift: NUM
+
+
+
+Current State: 29, Current Token: SEMI
+Action: r25
+Reduce: literal → NUM 
+
+
+
+Current State: 69, Current Token: SEMI
+Action: r24
+Reduce: expression → literal 
+
+
+
+Current State: 68, Current Token: SEMI
+Action: s95
+Shift: SEMI
+
+
+
+Current State: 95, Current Token: FLOAT
+Action: r6
+Reduce: declaration → type_specifier ID EQ expression SEMI 
+
+
+
+Current State: 12, Current Token: FLOAT
+Action: r12
+Reduce: statement → declaration 
+
+
+
+Current State: 14, Current Token: FLOAT
+Action: r9
+Reduce: statement_list → statement 
+
+
+
+Current State: 15, Current Token: FLOAT
+Action: s8
+Shift: FLOAT
+
+
+
+Current State: 8, Current Token: ID
+Action: r8
+Reduce: type_specifier → FLOAT 
+
+
+
+Current State: 16, Current Token: ID
+Action: s24
+Shift: ID
+
+
+
+Current State: 24, Current Token: EQ
+Action: s42
+Shift: EQ
+
+
+
+Current State: 42, Current Token: DEC
+Action: s26
+Shift: DEC
+
+
+
+Current State: 26, Current Token: SEMI
+Action: r26
+Reduce: literal → DEC 
+
+
+
+Current State: 69, Current Token: SEMI
+Action: r24
+Reduce: expression → literal 
+
+
+
+Current State: 68, Current Token: SEMI
+Action: s95
+Shift: SEMI
+
+
+
+Current State: 95, Current Token: WHILE
+Action: r6
+Reduce: declaration → type_specifier ID EQ expression SEMI 
+
+
+
+Current State: 12, Current Token: WHILE
+Action: r12
+Reduce: statement → declaration 
+
+
+
+Current State: 22, Current Token: WHILE
+Action: r10
+Reduce: statement_list → statement_list statement 
+
+
+
+Current State: 15, Current Token: WHILE
+Action: s21
+Shift: WHILE
+
+
+
+Current State: 21, Current Token: LPAREN
+Action: s33
+Shift: LPAREN
+
+
+
+Current State: 33, Current Token: ID
+Action: s56
+Shift: ID
+
+
+
+Current State: 56, Current Token: GT
+Action: r23
+Reduce: expression → ID 
+
+
+
+Current State: 60, Current Token: GT
+Action: s85
+Shift: GT
+
+
+
+Current State: 85, Current Token: NUM
+Action: s46
+Shift: NUM
+
+
+
+Current State: 46, Current Token: RPAREN
+Action: r25
+Reduce: literal → NUM 
+
+
+
+Current State: 48, Current Token: RPAREN
+Action: r24
+Reduce: expression → literal 
+
+
+
+Current State: 106, Current Token: RPAREN
+Action: r29
+Reduce: condition → expression GT expression 
+
+
+
+Current State: 59, Current Token: RPAREN
+Action: s83
+Shift: RPAREN
+
+
+
+Current State: 83, Current Token: LBRACE
+Action: s104
+Shift: LBRACE
+
+
+
+Current State: 104, Current Token: ID
+Action: s34
+Shift: ID
+
+
+
+Current State: 34, Current Token: DECC
+Action: s62
+Shift: DECC
+
+
+
+Current State: 62, Current Token: SEMI
+Action: s91
+Shift: SEMI
+
+
+
+Current State: 91, Current Token: RBRACE
+Action: r15
+Reduce: inc_dec_statement → ID DECC SEMI 
+
+
+
+Current State: 38, Current Token: RBRACE
+Action: r13
+Reduce: statement → inc_dec_statement 
+
+
+
+Current State: 39, Current Token: RBRACE
+Action: r9
+Reduce: statement_list → statement 
+
+
+
+Current State: 115, Current Token: RBRACE
+Action: s118
+Shift: RBRACE
+
+
+
+Current State: 118, Current Token: RBRACE
+Action: r27
+Reduce: while_stmt → WHILE LPAREN condition RPAREN LBRACE statement_list RBRACE 
+
+
+
+Current State: 23, Current Token: RBRACE
+Action: s35
+Shift: RBRACE
+
+
+
+Current State: 35, Current Token: $
+Action: r3
+Reduce: compound_stmt → LBRACE statement_list while_stmt RBRACE 
+
+
+
+Current State: 7, Current Token: $
+Action: r1
+Reduce: S → INT MAIN LPAREN RPAREN compound_stmt 
+
+
+
+Current State: 2, Current Token: $
+Action: Accept
+
+
 Parsing successful!
