@@ -29,6 +29,8 @@ statement: assignment
 
 inc_dec_statement: ID INC SEMI
     | ID DECC SEMI
+    | DECC ID SEMI
+    | INC ID SEMI
     ;
 
 assignment: ID EQ expression SEMI

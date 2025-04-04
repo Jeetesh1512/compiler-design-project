@@ -794,7 +794,7 @@ void parse(const string &filename)
     tokens.push_back(make_tuple(TokenType::END_OF_INPUT,"$",-1,-1,-1));
     
     Parser parser(tokens, productions, parsingTable, "parsingResult.txt");
-    cout << "The steps involved during parsing are written in parsingResult.txt" << endl;
+    cout << "The steps involved during parsing are written in 'parsingResult.txt'" << endl;
 
     parser.parse();
 }

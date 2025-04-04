@@ -6,6 +6,8 @@ int main()
     {
         int y=b;
         b=b+3.01;   //addition
-        a--;
+        --a;
     }
+    int x=5;
+    int z=a;
 }
