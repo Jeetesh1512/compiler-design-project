@@ -142,7 +142,7 @@ public:
         {
             if (!symbolTable.exists(value))
             {
-                cerr << "Error: Undeclared variable '" << value << "' at line " << line << endl;
+                cerr<< "Error: Undeclared variable '" << value << "' at line " << line << endl;
                 outputFile << "Error: Undeclared variable '" << value << "' at line " << line << endl;
             }
             else
@@ -169,7 +169,7 @@ public:
                     {
                         if (!symbolTable.exists(rhsVal))
                         {
-                            cerr << "Error: Undeclared variable '" << rhsVal << "' at line " << line << endl;
+                            cerr<< "\n\nError: Undeclared variable '" << rhsVal << "' at line " << line <<"\n\n"<< endl;
                             outputFile << "Error: Undeclared variable '" << rhsVal << "' at line " << line << endl;
                             return;
                         }
@@ -179,8 +179,8 @@ public:
 
                         if (lhsType != rhsTypeStr)
                         {
-                            cerr << "Error: Type mismatch between '" << lhsVar << "' (" << lhsType
-                                 << ") and '" << rhsVal << "' (" << rhsTypeStr << ") at line " << line << endl;
+                            cerr << "\n\nError: Type mismatch between '" << lhsVar << "' (" << lhsType
+                                 << ") and '" << rhsVal << "' (" << rhsTypeStr << ") at line " << line <<"\n\n"<< endl;
                             outputFile << "Error: Type mismatch between '" << lhsVar << "' (" << lhsType
                                        << ") and '" << rhsVal << "' (" << rhsTypeStr << ") at line " << line << endl;
                         }

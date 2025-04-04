@@ -243,15 +243,15 @@ Shift: LBRACE
 
 
 
-Current State: 116, Current Token: INT
-Action: s12
-Shift: INT
+Current State: 116, Current Token: FLOAT
+Action: s9
+Shift: FLOAT
 
 
 
-Current State: 12, Current Token: ID
-Action: r7
-Reduce: type_specifier → INT 
+Current State: 9, Current Token: ID
+Action: r8
+Reduce: type_specifier → FLOAT 
 Goto State: 49
 
 
@@ -267,7 +267,6 @@ Action: s106
 Shift: EQ
 
 
-Error: Type mismatch between 'y' (INT) and 'b' (FLOAT) at line 7
 
 Current State: 106, Current Token: ID
 Action: s32
