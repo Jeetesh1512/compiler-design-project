@@ -1,64 +1,10 @@
 #include <bits/stdc++.h>
 #include <regex>
-#include "symbolTable.cpp"
 #include "tokens.h"
 using namespace std;
 
-enum class TokenType
-{
-    ID,     // variable names
-    NUM,    // numbers (integers)
-    MAIN,   // main
-    WHILE,  // WHILE
-    DEC,    // decimal numbers (floats)
-    INT,    //"int" keyword
-    FLOAT,  //"float" keyword
-    EQ,     //"=" keyword
-    LPAREN, //"("
-    RPAREN, //")"
-    LBRACE, //"{"
-    RBRACE, //"}"
-    SEMI,   //";"
-    COMMA,  //","
-    LT,     //"<"
-    GT,     //">"
-    PLUS,   //"+"
-    MINUS,  //"-"
-    MULT,   //"*"
-    DIV,    //"/"
-    MOD,    //"%"
-    INC,    //"++"
-    DECC    //"--"
-};
-
-unordered_map<TokenType, string> tokenTypeNames = {
-    {TokenType::ID, "ID"},
-    {TokenType::NUM, "NUM"},
-    {TokenType::MAIN, "MAIN"},
-    {TokenType::WHILE, "WHILE"},
-    {TokenType::DEC, "DEC"},
-    {TokenType::INT, "INT"},
-    {TokenType::FLOAT, "FLOAT"},
-    {TokenType::EQ, "EQ"},
-    {TokenType::LPAREN, "LPAREN"},
-    {TokenType::RPAREN, "RPAREN"},
-    {TokenType::LBRACE, "LBRACE"},
-    {TokenType::RBRACE, "RBRACE"},
-    {TokenType::SEMI, "SEMI"},
-    {TokenType::COMMA, "COMMA"},
-    {TokenType::LT, "LT"},
-    {TokenType::GT, "GT"},
-    {TokenType::PLUS, "PLUS"},
-    {TokenType::MINUS, "MINUS"},
-    {TokenType::MULT, "MULT"},
-    {TokenType::DIV, "DIV"},
-    {TokenType::MOD, "MOD"},
-    {TokenType::INC, "INC"},
-    {TokenType::DECC, "DECC"}};
-
 //<TokenType,value,line,pos,scope level>
 vector<tuple<TokenType, string, int, int, int>> tokens;
-SymbolTable symTable;
 
 void tokenise(const string &code)
 {
@@ -92,7 +38,6 @@ void tokenise(const string &code)
     int pos = 0;
     int scopeNo = 0;
     string remainingCode = code;
-    string lastType = "";
 
     while (!remainingCode.empty())
     {
@@ -143,42 +88,13 @@ void tokenise(const string &code)
                 if (tokenType == TokenType::LBRACE)
                 {
                     scopeNo++;
-                    symTable.enterScope();
                 }
                 else if (tokenType == TokenType::RBRACE)
                 {
                     scopeNo--;
-                    symTable.exitScope();
-                }
-                else if (tokenType == TokenType::ID)
-                {
-                    if (!lastType.empty() && (lastType == "int" || lastType == "float"))
-                    {
-                        symTable.insert(lastType, tokenValue, "", lineNo, pos);
-                    }
-                    else if (symTable.exists(tokenValue))
-                    {
-                        symTable.markUsed(tokenValue, lineNo, pos);
-                    }
-                    else
-                    {
-                        cout << "Error: Undeclared variable " << tokenValue << " at line " << lineNo << endl;
-                    }
-                }
-
-                if (tokenType == TokenType::EQ)
-                {
-                    if (!tokens.empty() && get<0>(tokens.back()) == TokenType::ID)
-                    {
-                        string varName = get<1>(tokens.back());
-                        string value = match.suffix().str();
-                        string varType = symTable.getType(varName);
-                        symTable.insert(varType, varName, value, lineNo, pos);
-                    }
                 }
 
                 tokens.push_back({tokenType, tokenValue, lineNo, pos, scopeNo});
-                lastType = (tokenType == TokenType::INT || tokenType == TokenType::FLOAT) ? tokenValue : "";
 
                 size_t newLineCount = count(tokenValue.begin(), tokenValue.end(), '\n');
 
@@ -220,23 +136,6 @@ void tokenise(const string &code)
     }
 }
 
-vector<string> parserTokens;
-vector<string> getParserTokens()
-{
-    for(auto &[type,value,line,pos,scope]:tokens){
-        if(tokenTypeNames.find(type)!=tokenTypeNames.end())
-        {
-            parserTokens.push_back(tokenTypeNames.at(type));
-        }
-        else{
-            cerr<<"Unknown token type at line "<<line<<", position "<<pos<<endl;
-            exit(1);
-        }
-    }
-    parserTokens.push_back("$");
-    return parserTokens;
-}
-
 void lexer(const string &filename)
 {
     ifstream file(filename);
@@ -250,7 +149,6 @@ void lexer(const string &filename)
     file.close();
 
     tokenise(code);
-    symTable.printTable();
 
     ofstream outFile("tokens.txt");
 
@@ -276,6 +174,4 @@ void lexer(const string &filename)
 
     outFile.close();
     cout << "Tokens written to tokens.txt" << endl;
-
-    getParserTokens();
 }

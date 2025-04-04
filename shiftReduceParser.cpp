@@ -1,8 +1,9 @@
 #include <bits/stdc++.h>
+#include "tokens.h"
 using namespace std;
 
 class Parser {
-    vector<string> tokens;
+    vector<tuple<TokenType, string, int, int, int>> tokens;
     stack<int> stateStack; 
     stack<string> parseStack;  
     map<int, pair<string, vector<string>>> productions;
@@ -11,7 +12,7 @@ class Parser {
     ofstream outputFile;  
 
 public:
-    Parser(vector<string> tokens, map<int, pair<string, vector<string>>> productions, 
+    Parser(vector<tuple<TokenType, string, int, int, int>> tokens, map<int, pair<string, vector<string>>> productions, 
            map<pair<int, string>, string> parsingTable, const string& outputFileName) 
     {
         this->tokens = tokens;
@@ -35,7 +36,7 @@ public:
     void parse() {
         while (tokenIndex < tokens.size()) {
             int currentState = stateStack.top();
-            string currentToken = tokens[tokenIndex];
+            string currentToken = tokenTypeNames[get<0>(tokens[tokenIndex])];
 
             outputFile << "\nCurrent State: " << currentState << ", Current Token: " << currentToken << endl; 
             if (parsingTable.count({currentState, currentToken})) {
