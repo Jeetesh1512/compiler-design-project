@@ -66,7 +66,7 @@ public:
 
                     outputFile << "Reduce: " << lhs << " → ";
                     for (const string& s : rhs) outputFile << s << " ";
-                    outputFile <<"\n\n"<< endl;
+                    outputFile << "\nGoto State: " << gotoState << "\n\n" << endl;
                 } 
                 else if (action == "Accept") {  
                     outputFile << "\n\nParsing successful!" << endl;

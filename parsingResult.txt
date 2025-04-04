@@ -38,6 +38,7 @@ Shift: INT
 Current State: 10, Current Token: ID
 Action: r7
 Reduce: type_specifier → INT 
+Goto State: 16
 
 
 
@@ -62,12 +63,14 @@ Shift: NUM
 Current State: 29, Current Token: SEMI
 Action: r25
 Reduce: literal → NUM 
+Goto State: 69
 
 
 
 Current State: 69, Current Token: SEMI
 Action: r24
 Reduce: expression → literal 
+Goto State: 68
 
 
 
@@ -80,18 +83,21 @@ Shift: SEMI
 Current State: 95, Current Token: FLOAT
 Action: r6
 Reduce: declaration → type_specifier ID EQ expression SEMI 
+Goto State: 12
 
 
 
 Current State: 12, Current Token: FLOAT
 Action: r12
 Reduce: statement → declaration 
+Goto State: 14
 
 
 
 Current State: 14, Current Token: FLOAT
 Action: r9
 Reduce: statement_list → statement 
+Goto State: 15
 
 
 
@@ -104,6 +110,7 @@ Shift: FLOAT
 Current State: 8, Current Token: ID
 Action: r8
 Reduce: type_specifier → FLOAT 
+Goto State: 16
 
 
 
@@ -128,12 +135,14 @@ Shift: DEC
 Current State: 26, Current Token: SEMI
 Action: r26
 Reduce: literal → DEC 
+Goto State: 69
 
 
 
 Current State: 69, Current Token: SEMI
 Action: r24
 Reduce: expression → literal 
+Goto State: 68
 
 
 
@@ -146,18 +155,21 @@ Shift: SEMI
 Current State: 95, Current Token: WHILE
 Action: r6
 Reduce: declaration → type_specifier ID EQ expression SEMI 
+Goto State: 12
 
 
 
 Current State: 12, Current Token: WHILE
 Action: r12
 Reduce: statement → declaration 
+Goto State: 22
 
 
 
 Current State: 22, Current Token: WHILE
 Action: r10
 Reduce: statement_list → statement_list statement 
+Goto State: 15
 
 
 
@@ -182,6 +194,7 @@ Shift: ID
 Current State: 56, Current Token: GT
 Action: r23
 Reduce: expression → ID 
+Goto State: 60
 
 
 
@@ -200,18 +213,21 @@ Shift: NUM
 Current State: 46, Current Token: RPAREN
 Action: r25
 Reduce: literal → NUM 
+Goto State: 48
 
 
 
 Current State: 48, Current Token: RPAREN
 Action: r24
 Reduce: expression → literal 
+Goto State: 106
 
 
 
 Current State: 106, Current Token: RPAREN
 Action: r29
 Reduce: condition → expression GT expression 
+Goto State: 59
 
 
 
@@ -227,7 +243,157 @@ Shift: LBRACE
 
 
 
-Current State: 104, Current Token: ID
+Current State: 104, Current Token: INT
+Action: s10
+Shift: INT
+
+
+
+Current State: 10, Current Token: ID
+Action: r7
+Reduce: type_specifier → INT 
+Goto State: 41
+
+
+
+Current State: 41, Current Token: ID
+Action: s67
+Shift: ID
+
+
+
+Current State: 67, Current Token: EQ
+Action: s94
+Shift: EQ
+
+
+
+Current State: 94, Current Token: ID
+Action: s27
+Shift: ID
+
+
+
+Current State: 27, Current Token: SEMI
+Action: r23
+Reduce: expression → ID 
+Goto State: 113
+
+
+
+Current State: 113, Current Token: SEMI
+Action: s116
+Shift: SEMI
+
+
+
+Current State: 116, Current Token: ID
+Action: r6
+Reduce: declaration → type_specifier ID EQ expression SEMI 
+Goto State: 37
+
+
+
+Current State: 37, Current Token: ID
+Action: r12
+Reduce: statement → declaration 
+Goto State: 39
+
+
+
+Current State: 39, Current Token: ID
+Action: r9
+Reduce: statement_list → statement 
+Goto State: 115
+
+
+
+Current State: 115, Current Token: ID
+Action: s34
+Shift: ID
+
+
+
+Current State: 34, Current Token: EQ
+Action: s63
+Shift: EQ
+
+
+
+Current State: 63, Current Token: ID
+Action: s27
+Shift: ID
+
+
+
+Current State: 27, Current Token: PLUS
+Action: r23
+Reduce: expression → ID 
+Goto State: 92
+
+
+
+Current State: 92, Current Token: PLUS
+Action: s53
+Shift: PLUS
+
+
+
+Current State: 53, Current Token: DEC
+Action: s26
+Shift: DEC
+
+
+
+Current State: 26, Current Token: SEMI
+Action: r26
+Reduce: literal → DEC 
+Goto State: 31
+
+
+
+Current State: 31, Current Token: SEMI
+Action: r24
+Reduce: expression → literal 
+Goto State: 81
+
+
+
+Current State: 81, Current Token: SEMI
+Action: r17
+Reduce: expression → expression PLUS expression 
+Goto State: 92
+
+
+
+Current State: 92, Current Token: SEMI
+Action: s112
+Shift: SEMI
+
+
+
+Current State: 112, Current Token: ID
+Action: r16
+Reduce: assignment → ID EQ expression SEMI 
+Goto State: 36
+
+
+
+Current State: 36, Current Token: ID
+Action: r11
+Reduce: statement → assignment 
+Goto State: 66
+
+
+
+Current State: 66, Current Token: ID
+Action: r10
+Reduce: statement_list → statement_list statement 
+Goto State: 115
+
+
+
+Current State: 115, Current Token: ID
 Action: s34
 Shift: ID
 
@@ -248,18 +414,21 @@ Shift: SEMI
 Current State: 91, Current Token: RBRACE
 Action: r15
 Reduce: inc_dec_statement → ID DECC SEMI 
+Goto State: 38
 
 
 
 Current State: 38, Current Token: RBRACE
 Action: r13
 Reduce: statement → inc_dec_statement 
+Goto State: 66
 
 
 
-Current State: 39, Current Token: RBRACE
-Action: r9
-Reduce: statement_list → statement 
+Current State: 66, Current Token: RBRACE
+Action: r10
+Reduce: statement_list → statement_list statement 
+Goto State: 115
 
 
 
@@ -272,6 +441,7 @@ Shift: RBRACE
 Current State: 118, Current Token: RBRACE
 Action: r27
 Reduce: while_stmt → WHILE LPAREN condition RPAREN LBRACE statement_list RBRACE 
+Goto State: 23
 
 
 
@@ -284,12 +454,14 @@ Shift: RBRACE
 Current State: 35, Current Token: $
 Action: r3
 Reduce: compound_stmt → LBRACE statement_list while_stmt RBRACE 
+Goto State: 7
 
 
 
 Current State: 7, Current Token: $
 Action: r1
 Reduce: S → INT MAIN LPAREN RPAREN compound_stmt 
+Goto State: 2
 
 
 
