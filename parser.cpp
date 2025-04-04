@@ -597,8 +597,12 @@ void constructParsingTable(const map<int, vector<Item>> &states, map<int, pair<s
     if (find(terminals.begin(), terminals.end(), "$") == terminals.end())
         terminals.push_back("$");
 
-    int colWidth = 12; // Adjusted for better alignment
-    int totalColumns = terminals.size() + nonTerminals.size();
+    int colWidthTerminals = 12;    // Space for terminals
+    int colWidthNonTerminals = 18; // More space for non-terminals (Goto entries)
+
+    int totalTerminals = terminals.size();
+    int totalNonTerminals = nonTerminals.size() - 1; // Exclude start symbol
+    int totalColumns = totalTerminals + totalNonTerminals + 1;
 
     // Header
     outFile << "\n---------------------------- LR(1) Parsing Table ----------------------------\n";
@@ -606,14 +610,17 @@ void constructParsingTable(const map<int, vector<Item>> &states, map<int, pair<s
 
     for (const string &term : terminals)
         if (term != "epsilon")
-            outFile << setw(colWidth) << term << " |";
+            outFile << setw(colWidthTerminals) << term << " |";
 
     for (const string &nt : nonTerminals)
         if (nt != productions[0].first)
-            outFile << setw(colWidth) << nt << " |";
+            outFile << setw(colWidthNonTerminals) << nt << " |"; // More space
 
     outFile << "\n"
-            << string((colWidth + 2) * (totalColumns + 1), '-') << "\n";
+            << string(5 + 3 + (colWidthTerminals + 3) * totalTerminals +
+                          (colWidthNonTerminals + 3) * totalNonTerminals,
+                      '-')
+            << "\n";
 
     // Table Rows
     for (const auto &[stateId, items] : states)
@@ -625,7 +632,7 @@ void constructParsingTable(const map<int, vector<Item>> &states, map<int, pair<s
             if (term == "epsilon")
                 continue;
             string action = parsingTable[{stateId, term}];
-            outFile << setw(colWidth) << (action.empty() ? " " : action) << " |";
+            outFile << setw(colWidthTerminals) << (action.empty() ? " " : action) << " |";
         }
 
         for (const string &nt : nonTerminals)
@@ -633,14 +640,16 @@ void constructParsingTable(const map<int, vector<Item>> &states, map<int, pair<s
             if (nt != productions[0].first)
             {
                 string gotoAction = parsingTable[{stateId, nt}];
-                outFile << setw(colWidth) << (gotoAction.empty() ? " " : gotoAction) << " |";
+                outFile << setw(colWidthNonTerminals) << (gotoAction.empty() ? " " : gotoAction) << " |";
             }
         }
 
         outFile << "\n"
-                << string((colWidth + 2) * (totalColumns + 1), '-') << "\n";
+                << string(5 + 3 + (colWidthTerminals + 3) * totalTerminals +
+                              (colWidthNonTerminals + 3) * totalNonTerminals,
+                          '-')
+                << "\n";
     }
-
     outFile.close();
 }
 
@@ -781,15 +790,6 @@ void parse(const string &filename)
 
     cout << "First and follow sets written to 'itemsets.txt'" << endl;
     cout << "Parsing Table written to 'parsingtable.txt'" << endl;
-
-    // cout << "Parsing Table for State 29: " << endl;
-    // for (auto &entry : parsingTable)
-    // {
-    //     if (entry.first.first == 29)
-    //     {
-    //         cout << "Token: " << entry.first.second << " -> Action: " << entry.second << endl;
-    //     }
-    // }
 
     Parser parser(parserTokens, productions, parsingTable, "parsingResult.txt");
     cout << "The steps involved during parsing are written in parsingResult.txt" << endl;
