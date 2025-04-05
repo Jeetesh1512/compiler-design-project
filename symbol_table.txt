@@ -8,7 +8,7 @@
 |    → Line 3   , Pos 8   , Scope 1                                      |
 |    → Line 5   , Pos 10  , Scope 1                                      |
 |    → Line 9   , Pos 10  , Scope 2                                      |
-|    → Line 12  , Pos 9   , Scope 1                                      |
+|    → Line 12  , Pos 12  , Scope 1                                      |
 |    → Line 12  , Pos 10  , Scope 1                                      |
 +-------------+--------+---------+------+-----+-------+------------------+
 | FLOAT       | b      | 4.78    | 4    | 11  | 1     | 0x1004           |
@@ -16,10 +16,10 @@
 | Referenced at:                                                         |
 |                                                                        |
 |    → Line 4   , Pos 10  , Scope 1                                      |
-|    → Line 7   , Pos 15  , Scope 2                                      |
+|    → Line 7   , Pos 7   , Scope 2                                      |
 |    → Line 7   , Pos 16  , Scope 2                                      |
 |    → Line 8   , Pos 8   , Scope 2                                      |
-|    → Line 8   , Pos 9   , Scope 2                                      |
+|    → Line 8   , Pos 8   , Scope 2                                      |
 |    → Line 8   , Pos 10  , Scope 2                                      |
 +-------------+--------+---------+------+-----+-------+------------------+
 | FLOAT       | y      | UNKNOWN | 7    | 15  | 2     | 0x100c           |

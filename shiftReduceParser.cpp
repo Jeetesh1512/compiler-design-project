@@ -143,7 +143,7 @@ public:
         {
             if (!symbolTable.exists(value))
             {
-                cerr<< "Error: Undeclared variable '" << value << "' at line " << line << endl;
+                cerr << "Error: Undeclared variable '" << value << "' at line " << line << endl;
                 outputFile << "Error: Undeclared variable '" << value << "' at line " << line << endl;
             }
             else
@@ -156,39 +156,38 @@ public:
             if (tokenIndex - 1 >= 0 && get<0>(tokens[tokenIndex - 1]) == TokenType::ID)
             {
                 string lhsVar = get<1>(tokens[tokenIndex - 1]);
+                string expression = "";
+                bool containsVariable = false;
 
-                if (tokenIndex + 1 < tokens.size())
+                int i = tokenIndex + 1;
+                while (i < tokens.size() && get<0>(tokens[i]) != TokenType::SEMI)
                 {
-                    TokenType rhsType = get<0>(tokens[tokenIndex + 1]);
-                    string rhsVal = get<1>(tokens[tokenIndex + 1]);
+                    TokenType tType = get<0>(tokens[i]);
+                    string tVal = get<1>(tokens[i]);
 
-                    if (rhsType == TokenType::NUM || rhsType == TokenType::DEC)
+                    if (tType == TokenType::ID)
                     {
-                        symbolTable.updateValue(lhsVar, rhsVal, line, pos);
-                    }
-                    else if (rhsType == TokenType::ID)
-                    {
-                        if (!symbolTable.exists(rhsVal))
+                        if (!symbolTable.exists(tVal))
                         {
-                            cerr<< "\n\nError: Undeclared variable '" << rhsVal << "' at line " << line <<"\n\n"<< endl;
-                            outputFile << "Error: Undeclared variable '" << rhsVal << "' at line " << line << endl;
+                            cerr << "\n\nError: Undeclared variable '" << tVal << "' at line " << line << "\n\n";
+                            outputFile << "Error: Undeclared variable '" << tVal << "' at line " << line << endl;
                             return;
                         }
-
-                        string lhsType = symbolTable.getType(lhsVar);
-                        string rhsTypeStr = symbolTable.getType(rhsVal);
-
-                        if (lhsType != rhsTypeStr)
-                        {
-                            cerr << "\n\nError: Type mismatch between '" << lhsVar << "' (" << lhsType
-                                 << ") and '" << rhsVal << "' (" << rhsTypeStr << ") at line " << line <<"\n\n"<< endl;
-                            outputFile << "Error: Type mismatch between '" << lhsVar << "' (" << lhsType
-                                       << ") and '" << rhsVal << "' (" << rhsTypeStr << ") at line " << line << endl;
-                        }
-
-                        symbolTable.updateValue(lhsVar, "UNKNOWN", line, pos);
-                        symbolTable.markUsed(rhsVal, line, pos);
+                        containsVariable = true;
+                        symbolTable.markUsed(tVal, line, get<2>(tokens[i])); 
                     }
+
+                    expression += tVal;
+                    i++;
+                }
+
+                if (containsVariable)
+                {
+                    symbolTable.updateValue(lhsVar, "UNKNOWN", line, pos);
+                }
+                else
+                {
+                    symbolTable.updateValue(lhsVar,expression, line, pos);
                 }
             }
         }
