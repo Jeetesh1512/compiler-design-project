@@ -3,25 +3,6 @@
 #include "shiftReduceParser.cpp"
 using namespace std;
 
-template <typename K, typename V>
-void removeDuplicates(map<K, V> &inputMap)
-{
-    set<V> seenValues;
-
-    for (auto it = inputMap.begin(); it != inputMap.end();)
-    {
-        if (seenValues.find(it->second) != seenValues.end())
-        {
-            it = inputMap.erase(it);
-        }
-        else
-        {
-            seenValues.insert(it->second);
-            it++;
-        }
-    }
-}
-
 void readTerminals_and_nonTerminals(vector<string> &nonTerminals, vector<string> &terminals, set<string> &terminalSet, ifstream &file)
 {
     string line;
@@ -93,6 +74,25 @@ string trim(const string &str)
 
     size_t last = str.find_last_not_of(' ');
     return str.substr(first, last - first + 1);
+}
+
+template <typename K, typename V>
+void removeDuplicates(map<K, V> &inputMap)
+{
+    set<V> seenValues;
+
+    for (auto it = inputMap.begin(); it != inputMap.end();)
+    {
+        if (seenValues.find(it->second) != seenValues.end())
+        {
+            it = inputMap.erase(it);
+        }
+        else
+        {
+            seenValues.insert(it->second);
+            it++;
+        }
+    }
 }
 
 // Helper function to split the string into symbols
@@ -536,7 +536,14 @@ void createItemSet(map<int, pair<string, vector<string>>> &productions, vector<s
     }
 }
 
-void constructParsingTable(const map<int, vector<Item>> &states, map<int, pair<string, vector<string>>> &productions, vector<string> &nonTerminals, vector<string> &terminals, set<string> &terminalSet, map<string, set<string>> &first, map<string, set<string>> &follow, map<pair<int, string>, string> &parsingTable)
+void constructParsingTable(const map<int, vector<Item>> &states,
+                           map<int, pair<string, vector<string>>> &productions,
+                           vector<string> &nonTerminals,
+                           vector<string> &terminals,
+                           set<string> &terminalSet,
+                           map<string, set<string>> &first,
+                           map<string, set<string>> &follow,
+                           map<pair<int, string>, string> &parsingTable)
 {
     for (const auto &[stateId, items] : states)
     {
@@ -593,63 +600,95 @@ void constructParsingTable(const map<int, vector<Item>> &states, map<int, pair<s
         return;
     }
 
-    // Ensure `$` is in terminals
+    // Ensure $ is in terminals
     if (find(terminals.begin(), terminals.end(), "$") == terminals.end())
         terminals.push_back("$");
 
-    int colWidthTerminals = 12;    // Space for terminals
-    int colWidthNonTerminals = 18; // More space for non-terminals (Goto entries)
+    // Filter visible symbols
+    vector<string> visibleTerminals;
+    for (const string &t : terminals)
+        if (t != "epsilon")
+            visibleTerminals.push_back(t);
 
-    int totalTerminals = terminals.size();
-    int totalNonTerminals = nonTerminals.size() - 1; // Exclude start symbol
-    int totalColumns = totalTerminals + totalNonTerminals + 1;
-
-    // Header
-    outFile << "\n---------------------------- LR(1) Parsing Table ----------------------------\n";
-    outFile << setw(5) << "State" << " |";
-
-    for (const string &term : terminals)
-        if (term != "epsilon")
-            outFile << setw(colWidthTerminals) << term << " |";
-
+    vector<string> visibleNonTerminals;
     for (const string &nt : nonTerminals)
         if (nt != productions[0].first)
-            outFile << setw(colWidthNonTerminals) << nt << " |"; // More space
+            visibleNonTerminals.push_back(nt);
 
-    outFile << "\n"
-            << string(5 + 3 + (colWidthTerminals + 3) * totalTerminals +
-                          (colWidthNonTerminals + 3) * totalNonTerminals,
-                      '-')
-            << "\n";
+    // Column widths
+    int colWidthTerminals = 12;
+    int colWidthNonTerminals = 18;
+    int stateWidth = 7;
 
-    // Table Rows
+    int actionWidth = (colWidthTerminals + 3) * visibleTerminals.size();
+    int gotoWidth = (colWidthNonTerminals + 3) * visibleNonTerminals.size();
+    int totalWidth = gotoWidth + actionWidth - 27 ;
+
+    // Title
+    string title = "LR(1) Parsing Table";
+    int titlePos = (totalWidth - title.length()) / 2;
+    outFile << string(titlePos, '-') << " " << title << " " << string(totalWidth - titlePos - title.length() - 2, '-') << "\n\n";
+
+    // Top header line
+    outFile<<string(stateWidth+1,'-')<<"+";
+    outFile<<string(actionWidth-25,'-')<<"+";
+    outFile<<string(gotoWidth-13,'-')<<"+\n";
+
+    // First header row: State | ACTION | GOTO
+    outFile << setw(stateWidth) << "State" << " |";
+    outFile << setw(actionWidth / 2 + 30) << "ACTION (terminals)";
+    outFile <<setw(gotoWidth / 2) << "|" <<setw(gotoWidth / 2)<<"GOTO (non-terminals)" <<setw(gotoWidth / 2-11)<< "|\n";
+
+    outFile << string(stateWidth, '-') << "-+";
+        for (size_t i = 0; i < visibleTerminals.size(); ++i)
+            outFile << string(colWidthTerminals, '-') << "-+";
+        for (size_t i = 0; i < visibleNonTerminals.size(); ++i)
+            outFile << string(colWidthNonTerminals, '-') << "-+";
+        outFile << "\n";
+    // Second header row: terminals and non-terminals
+    outFile << setw(stateWidth) << " " << " |";
+    for (const string &term : visibleTerminals)
+        outFile << setw(colWidthTerminals) << term << " |";
+    for (const string &nt : visibleNonTerminals)
+        outFile << setw(colWidthNonTerminals) << nt << " |";
+    outFile << "\n";
+
+    // Separator line
+    outFile << string(stateWidth, '-') << "-+";
+    for (size_t i = 0; i < visibleTerminals.size(); ++i)
+        outFile << string(colWidthTerminals, '-') << "-+";
+    for (size_t i = 0; i < visibleNonTerminals.size(); ++i)
+        outFile << string(colWidthNonTerminals, '-') << "-+";
+    outFile << "\n";
+
+    // Table rows
     for (const auto &[stateId, items] : states)
     {
-        outFile << setw(5) << stateId << " |";
+        outFile << setw(stateWidth) << stateId << " |";
 
-        for (const string &term : terminals)
+        for (const string &term : visibleTerminals)
         {
-            if (term == "epsilon")
-                continue;
             string action = parsingTable[{stateId, term}];
             outFile << setw(colWidthTerminals) << (action.empty() ? " " : action) << " |";
         }
 
-        for (const string &nt : nonTerminals)
+        for (const string &nt : visibleNonTerminals)
         {
-            if (nt != productions[0].first)
-            {
-                string gotoAction = parsingTable[{stateId, nt}];
-                outFile << setw(colWidthNonTerminals) << (gotoAction.empty() ? " " : gotoAction) << " |";
-            }
+            string go = parsingTable[{stateId, nt}];
+            outFile << setw(colWidthNonTerminals) << (go.empty() ? " " : go) << " |";
         }
 
-        outFile << "\n"
-                << string(5 + 3 + (colWidthTerminals + 3) * totalTerminals +
-                              (colWidthNonTerminals + 3) * totalNonTerminals,
-                          '-')
-                << "\n";
+        outFile << "\n";
+
+        // Row separator
+        outFile << string(stateWidth, '-') << "-+";
+        for (size_t i = 0; i < visibleTerminals.size(); ++i)
+            outFile << string(colWidthTerminals, '-') << "-+";
+        for (size_t i = 0; i < visibleNonTerminals.size(); ++i)
+            outFile << string(colWidthNonTerminals, '-') << "-+";
+        outFile << "\n";
     }
+
     outFile.close();
 }
 
@@ -791,10 +830,9 @@ void parse(const string &filename)
     cout << "First and follow sets written to 'itemsets.txt'" << endl;
     cout << "Parsing Table written to 'parsingtable.txt'" << endl;
 
-    tokens.push_back(make_tuple(TokenType::END_OF_INPUT,"$",-1,-1,-1));
-    
+    tokens.push_back(make_tuple(TokenType::END_OF_INPUT, "$", -1, -1, -1));
+
     Parser parser(tokens, productions, parsingTable, "parsingResult.txt");
-    cout << "The steps involved during parsing are written in 'parsingResult.txt'" << endl;
 
     parser.parse();
 }

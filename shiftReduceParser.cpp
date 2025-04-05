@@ -97,6 +97,7 @@ public:
                 else if (action == "Accept")
                 {
                     outputFile << "\n\nParsing successful!" << endl;
+                    cout << "The steps involved during parsing are written in 'parsingResult.txt'" << endl;
                     ofstream outFile("symbol_table.txt");
                     if (outFile.is_open())
                     {
