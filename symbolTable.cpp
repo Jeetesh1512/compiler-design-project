@@ -185,10 +185,10 @@ public:
 
     void printTable(ostream &out)
     {
-        out << "+-------------+--------+---------+------+-------+------------------+\n";
-        out << "| Token Type  | Name   |  Value  | Line | Scope |   Memory Addr    |\n";
-        out << "+-------------+--------+---------+------+-------+------------------+\n";
-    
+        out << "+-------------+--------+---------+------+-----+-------+------------------+\n";
+        out << "| Token Type  | Name   |  Value  | Line | Pos | Scope |   Memory Addr    |\n";
+        out << "+-------------+--------+---------+------+-----+-------+------------------+\n";
+
         vector<Symbol> allSymbols;
         for (const auto &scopeEntry : table)
         {
@@ -197,36 +197,37 @@ public:
                 allSymbols.push_back(varEntry.second);
             }
         }
-    
+
         // Sort by increasing memory address
-        sort(allSymbols.begin(), allSymbols.end(), [](const Symbol &a, const Symbol &b) {
-            return a.memoryAddress < b.memoryAddress;
-        });
-    
+        sort(allSymbols.begin(), allSymbols.end(), [](const Symbol &a, const Symbol &b)
+             { return a.memoryAddress < b.memoryAddress; });
+
         for (auto &sym : allSymbols)
         {
             out << "| " << setw(11) << left << sym.tokenType
                 << " | " << setw(6) << left << sym.name
                 << " | " << setw(7) << left << sym.value
                 << " | " << setw(4) << sym.line
+                << " | " << setw(3) << sym.pos
                 << " | " << setw(5) << sym.scope
                 << " | " << "0x" << setw(8) << hex << sym.memoryAddress << dec << setfill(' ') << "       |\n";
-            out << "+-------------+--------+---------+------+-------+------------------+\n";
-    
+
+            out << "+-------------+--------+---------+------+-----+-------+------------------+\n";
+
             if (!sym.references.empty())
             {
-                out << "| Referenced at:                                                   |\n";
-                out << "|                                                                  |\n";
+                out << "| Referenced at:                                                         |\n";
+                out << "|                                                                        |\n";
                 for (auto &ref : sym.references)
                 {
                     int refLine, refPos, refScope;
                     tie(refLine, refPos, refScope) = ref;
                     out << "|    → Line " << setw(3) << refLine
                         << " , Pos " << setw(3) << refPos
-                        << " , Scope " << setw(3) << refScope << "                              |\n";
+                        << " , Scope " << setw(3) << refScope << "                                    |\n";
                 }
-                out << "+-------------+--------+---------+------+-------+------------------+\n";
+                out << "+-------------+--------+---------+------+-----+-------+------------------+\n";
             }
         }
-    }    
+    }
 };
