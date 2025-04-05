@@ -18,6 +18,7 @@ struct Symbol
 
 class SymbolTable
 {
+                //scope,             name,  Symbol
     unordered_map<int, unordered_map<string, Symbol>> table;
     stack<int> scopeStack;
     int currScope;
