@@ -35,11 +35,11 @@ public:
 
         if (tokenType == "INT")
         {
-            currentMemoryAddress += 2;
+            currentMemoryAddress += 4;
         }
         else if (tokenType == "FLOAT")
         {
-            currentMemoryAddress += 4;
+            currentMemoryAddress += 8;
         }
 
         return assignedAddress;
