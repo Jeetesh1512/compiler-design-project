@@ -11,6 +11,8 @@ struct Symbol
     int pos;
     int scope;
     uintptr_t memoryAddress;
+
+    //line,position,scope
     vector<tuple<int, int, int>> references;
 };
 
