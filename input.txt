@@ -1,13 +1,13 @@
 int main()
 {
-    int a=6;
+    int a=(6+2)*2;
     float b=4.78;
     while(a>0)
     {
         float y=b;
-        b=b+3.01;   //addition
+        b=3.01+b;   //addition
         --a;
     }
     int x=5;
-    int z=a;
+    int z=2+a;
 }

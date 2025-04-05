@@ -54,7 +54,85 @@ Shift: EQ
 
 
 
-Current State: 50, Current Token: NUM
+Current State: 50, Current Token: LPAREN
+Action: s33
+Shift: LPAREN
+
+
+
+Current State: 33, Current Token: NUM
+Action: s54
+Shift: NUM
+
+
+
+Current State: 54, Current Token: PLUS
+Action: r27
+Reduce: literal → NUM 
+Goto State: 56
+
+
+
+Current State: 56, Current Token: PLUS
+Action: r26
+Reduce: expression → literal 
+Goto State: 55
+
+
+
+Current State: 55, Current Token: PLUS
+Action: s85
+Shift: PLUS
+
+
+
+Current State: 85, Current Token: NUM
+Action: s54
+Shift: NUM
+
+
+
+Current State: 54, Current Token: RPAREN
+Action: r27
+Reduce: literal → NUM 
+Goto State: 56
+
+
+
+Current State: 56, Current Token: RPAREN
+Action: r26
+Reduce: expression → literal 
+Goto State: 114
+
+
+
+Current State: 114, Current Token: RPAREN
+Action: r19
+Reduce: expression → expression PLUS expression 
+Goto State: 55
+
+
+
+Current State: 55, Current Token: RPAREN
+Action: s86
+Shift: RPAREN
+
+
+
+Current State: 86, Current Token: MULT
+Action: r24
+Reduce: expression → LPAREN expression RPAREN 
+Goto State: 78
+
+
+
+Current State: 78, Current Token: MULT
+Action: s60
+Shift: MULT
+
+
+
+Current State: 60, Current Token: NUM
 Action: s34
 Shift: NUM
 
@@ -63,13 +141,20 @@ Shift: NUM
 Current State: 34, Current Token: SEMI
 Action: r27
 Reduce: literal → NUM 
-Goto State: 79
+Goto State: 36
 
 
 
-Current State: 79, Current Token: SEMI
+Current State: 36, Current Token: SEMI
 Action: r26
 Reduce: expression → literal 
+Goto State: 90
+
+
+
+Current State: 90, Current Token: SEMI
+Action: r21
+Reduce: expression → expression MULT expression 
 Goto State: 78
 
 
@@ -320,15 +405,22 @@ Shift: EQ
 
 
 
-Current State: 72, Current Token: ID
-Action: s32
-Shift: ID
+Current State: 72, Current Token: DEC
+Action: s31
+Shift: DEC
 
 
 
-Current State: 32, Current Token: PLUS
-Action: r25
-Reduce: expression → ID 
+Current State: 31, Current Token: PLUS
+Action: r28
+Reduce: literal → DEC 
+Goto State: 36
+
+
+
+Current State: 36, Current Token: PLUS
+Action: r26
+Reduce: expression → literal 
 Goto State: 103
 
 
@@ -339,22 +431,15 @@ Shift: PLUS
 
 
 
-Current State: 61, Current Token: DEC
-Action: s31
-Shift: DEC
+Current State: 61, Current Token: ID
+Action: s32
+Shift: ID
 
 
 
-Current State: 31, Current Token: SEMI
-Action: r28
-Reduce: literal → DEC 
-Goto State: 36
-
-
-
-Current State: 36, Current Token: SEMI
-Action: r26
-Reduce: expression → literal 
+Current State: 32, Current Token: SEMI
+Action: r25
+Reduce: expression → ID 
 Goto State: 91
 
 
@@ -542,7 +627,33 @@ Shift: EQ
 
 
 
-Current State: 106, Current Token: ID
+Current State: 106, Current Token: NUM
+Action: s34
+Shift: NUM
+
+
+
+Current State: 34, Current Token: PLUS
+Action: r27
+Reduce: literal → NUM 
+Goto State: 126
+
+
+
+Current State: 126, Current Token: PLUS
+Action: r26
+Reduce: expression → literal 
+Goto State: 125
+
+
+
+Current State: 125, Current Token: PLUS
+Action: s61
+Shift: PLUS
+
+
+
+Current State: 61, Current Token: ID
 Action: s32
 Shift: ID
 
@@ -551,6 +662,13 @@ Shift: ID
 Current State: 32, Current Token: SEMI
 Action: r25
 Reduce: expression → ID 
+Goto State: 91
+
+
+
+Current State: 91, Current Token: SEMI
+Action: r19
+Reduce: expression → expression PLUS expression 
 Goto State: 125
 
 
