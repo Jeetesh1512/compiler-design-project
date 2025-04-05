@@ -1,5 +1,5 @@
 #include "lexer.cpp"
-#include "parser.cpp"
+#include "itemSetCreator.cpp"
 
 int main(int argc, char *argv[])
 {
@@ -14,5 +14,5 @@ int main(int argc, char *argv[])
 
     lexer(inputfile);
     
-    parse(grammarfile);
+    createAllItemSets(grammarfile);
 }

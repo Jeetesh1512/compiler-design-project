@@ -739,7 +739,7 @@ void printStates(const map<int, vector<Item>> &states, ofstream &outFile)
     outFile.close();
 }
 
-void parse(const string &filename)
+void createAllItemSets(const string &filename)
 {
     ifstream file(filename);
     if (!file.is_open())
